@@ -41,7 +41,7 @@ Shader::Shader(const GLchar* name)
     if (!success)
     {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER(" << string(name) << ")::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
     // ����������� ������
@@ -52,7 +52,7 @@ Shader::Shader(const GLchar* name)
     if (!success)
     {
         glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER(" << string(name) << ")::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
     this->Program = glCreateProgram();
@@ -63,7 +63,7 @@ Shader::Shader(const GLchar* name)
     if (!success)
     {
         glGetProgramInfoLog(this->Program, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER(" << string(name) << ")::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
 
     glDeleteShader(vertex);

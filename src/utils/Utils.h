@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "../models/Model.h"
 
 //"D:\oldold\code\vs\RTS\RTS\resources";
 //"C:\\Users\\Max\\source\\repos\\Makunika\\RTS\\RTS\\resources";
@@ -16,6 +17,10 @@ public:
 
 	static std::string getImagePathString() {
 		return R"(..\resources\images\)";
+	}
+
+    static std::string getResourcesPathString() {
+        return R"(..\resources\)";
 	}
 };
 

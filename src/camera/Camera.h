@@ -56,14 +56,12 @@ public:
         updateCameraVectors();
     }
 
-    // ���������� ������� ����, ����������� � �������������� ����� ������ � LookAt-������� 
     glm::mat4 getViewMatrix()
     {
         return glm::lookAt(Position, Position + Front, Up);
     }
 
 
-    //������������ ������� ������, ���������� �� ����� ������������������ ������� �����. ��������� ������� �������� � ���� ������������� ������� ������������ (��� ��������������� ��� �� ������� ������)
     void processKeyboard(CameraMovement direction, float deltaTime)
     {
 	    const float velocity = MovementSpeed * deltaTime;
@@ -79,7 +77,6 @@ public:
         //Position.y = 0.0f; 
     }
 
-    //������������ ������� ������, ���������� �� ������� ����� � ������� ����. ������� � �������� ���������� �������� �������� ��� � ����������� X, ��� � � ����������� Y.
     void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
     {
         xoffset *= MouseSensitivity;
@@ -88,7 +85,6 @@ public:
         Yaw += xoffset;
         Pitch += yoffset;
 
-        // ����������, ��� ����� ������ ������� �� ������� ������, ����� �� ����������������
         if (constrainPitch)
         {
             if (Pitch > 89.0f)
@@ -97,11 +93,9 @@ public:
                 Pitch = -89.0f;
         }
 
-        // ��������� �������� �������-�����, �������-������ � �������-�����, ��������� ����������� �������� ����� ������
         updateCameraVectors();
     }
 
-    // ������������ ������� ������, ���������� �� ������� ������ ��������� ����. ���������� ������ ������� ������ �� ������������ ��� �������� 
     void processMouseScroll(float yoffset)
     {
         if (Zoom >= 1.0f && Zoom <= 45.0f)
@@ -113,17 +107,14 @@ public:
     }
 
 private:
-    // ��������� ������-����� �� (�����������) ����� ������ ������
     void updateCameraVectors()
     {
-        // ��������� ����� ������-�����
         glm::vec3 front;
         front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         front.y = sin(glm::radians(Pitch));
         front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         Front = glm::normalize(front);
-        // ����� ������������� ������-������ � ������-�����
-        Right = glm::normalize(glm::cross(Front, WorldUp));  // ����������� �������, ������ ��� �� ����� ���������� ��������� � 0 ��� ������, ��� ������ �� �������� ����� ��� ����, ��� �������� � ����� ���������� ��������.
+        Right = glm::normalize(glm::cross(Front, WorldUp));
         Up = glm::normalize(glm::cross(Right, Front));
     }
 };

@@ -62,8 +62,9 @@ public:
 
 	void run()
 	{
-        Shader lightingShader("test");
+        Shader lightingShader("object");
         Shader lightCubeShader("light");
+        Shader modelShader("model_test");
 
         vector<float> v = ShaderUtils::getCubeWithNormalAndTexture();
         VAO_VBO vCube = ShaderUtils::load2vec3And1vec2(&v[0], v.size());
@@ -84,6 +85,13 @@ public:
                 glm::vec3(-1.3f,  1.0f, -1.5f)
         };
 
+        glm::vec3 pointLightPositions[] = {
+                glm::vec3( 0.7f,  0.2f,  2.0f),
+                glm::vec3( 2.3f, -3.3f, -4.0f),
+                glm::vec3(-4.0f,  2.0f, -12.0f),
+                glm::vec3( 0.0f,  0.0f, -3.0f)
+        };
+
         // Загрузка текстур
         unsigned int diffuseMap = TextureOne("container_2.png").getTexture();
         unsigned int specMap = TextureOne("container_spec.png").getTexture();
@@ -93,6 +101,12 @@ public:
         lightingShader.setInt("material.diffuse", 0);
         lightingShader.setInt("material.specular", 1);
 
+//        lightingShader.setFloat("light.constant", 1.0f);
+//        lightingShader.setFloat("light.linear", 0.09f);
+//        lightingShader.setFloat("light.quadratic", 0.032f);
+
+        stbi_set_flip_vertically_on_load(true);
+        Model* modelO = new Model(Utils::getResourcesPathString() + "objects\\backpack\\backpack.obj");
 
         glm::mat4 projection = glm::perspective(glm::radians(state->camera->Zoom), (float)state->width / (float)state->height, 0.1f, 100.0f);
 		
@@ -112,13 +126,39 @@ public:
 
             // Убеждаемся, что активировали шейдер прежде, чем настраивать uniform-переменные/объекты_рисования
             lightingShader.use();
-            lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+            //lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+
+            //lightingShader.setVec3("light.position", lightPos);
             lightingShader.setVec3("viewPos", state->camera->Position);
 
             // Свойства света
-            lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-            lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-            lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+            //Направленный свет
+            lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+            lightingShader.setVec3("dirLight.ambient", 0.1f, 0.1f, 0.1f);
+            lightingShader.setVec3("dirLight.diffuse", 0.3f, 0.3f, 0.3f);
+            lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+            //Точечный свет
+            for (int i = 0; i < 4; ++i) {
+                string point = "pointLights[" + to_string(i) + "]";
+                lightingShader.setVec3(point + ".ambient", 0.0f, 0.0f, 0.0f);
+                lightingShader.setVec3(point + ".diffuse", 0.2f, 0.2f, 0.2f);
+                lightingShader.setVec3(point + ".specular", 1.0f, 1.0f, 1.0f);
+                lightingShader.setFloat(point + ".constant", 1.0f);
+                lightingShader.setFloat(point + ".linear", 0.09f);
+                lightingShader.setFloat(point + ".quadratic", 0.032f);
+                lightingShader.setVec3(point + ".position", pointLightPositions[i]);
+            }
+            //Прожектор
+            lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+            lightingShader.setVec3("spotLight.diffuse", 0.5f, 0.5f, 0.5f);
+            lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+            lightingShader.setVec3("spotLight.position", state->camera->Position);
+            lightingShader.setVec3("spotLight.direction", state->camera->Front);
+            lightingShader.setFloat("spotLight.constant", 1.0f);
+            lightingShader.setFloat("spotLight.linear", 0.09f);
+            lightingShader.setFloat("spotLight.quadratic", 0.032f);
+            lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+            lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
 
             // Свойства материалов
             lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
@@ -146,18 +186,71 @@ public:
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
 
-
-            // Также отрисовываем наш объект-"лампочку" 
             lightCubeShader.use();
             lightCubeShader.setMatrix4("projection", projection);
             lightCubeShader.setMatrix4("view", view);
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, lightPos);
-            model = glm::scale(model, glm::vec3(0.2f)); // куб меньшего размера
-            lightCubeShader.setMatrix4("model", model);
-
             glBindVertexArray(vLight.VAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            // Также отрисовываем наш объект-"лампочку"
+            for (const auto &item : pointLightPositions) {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, item);
+                model = glm::scale(model, glm::vec3(0.2f)); // куб меньшего размера
+                lightCubeShader.setMatrix4("model", model);
+                glDrawArrays(GL_TRIANGLES, 0, 36);
+            }
+
+            //модель
+            modelShader.use();
+
+            //настраиваем свет
+            modelShader.setVec3("viewPos", state->camera->Position);
+            /*modelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+            modelShader.setVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f);
+            modelShader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+            modelShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+            //Точечный свет
+            for (int i = 0; i < 4; ++i) {
+                string point = "pointLights[" + to_string(i) + "]";
+                modelShader.setVec3(point + ".ambient", 0.2f, 0.2f, 0.2f);
+                modelShader.setVec3(point + ".diffuse", 0.5f, 0.5f, 0.5f);
+                modelShader.setVec3(point + ".specular", 1.0f, 1.0f, 1.0f);
+                modelShader.setFloat(point + ".constant", 1.0f);
+                modelShader.setFloat(point + ".linear", 0.09f);
+                modelShader.setFloat(point + ".quadratic", 0.032f);
+                modelShader.setVec3(point + ".position", pointLightPositions[i]);
+            }
+
+            modelShader.setVec3("spotLight.ambient", 0.2f, 0.2f, 0.2f);
+            modelShader.setVec3("spotLight.diffuse", 0.5f, 0.5f, 0.5f);
+            modelShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+            modelShader.setVec3("spotLight.position", state->camera->Position);
+            modelShader.setVec3("spotLight.direction", state->camera->Front);
+            modelShader.setFloat("spotLight.constant", 1.0f);
+            modelShader.setFloat("spotLight.linear", 0.09f);
+            modelShader.setFloat("spotLight.quadratic", 0.032f);
+            modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+            modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));*/
+
+            modelShader.setVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
+            modelShader.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
+            modelShader.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
+            modelShader.setFloat( "pointLight.constant", 1.0f);
+            modelShader.setFloat( "pointLight.linear", 0.09f);
+            modelShader.setFloat( "pointLight.quadratic", 0.032f);
+            modelShader.setVec3("pointLight.position", pointLightPositions[3]);
+
+            modelShader.setFloat("shininess", 64.0f);
+
+
+            view = state->camera->getViewMatrix();
+            modelShader.setMatrix4("projection", projection);
+            modelShader.setMatrix4("view", view);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f)); // смещаем вниз чтобы быть в центре сцены
+            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// объект слишком большой для нашей сцены, поэтому немного уменьшим его
+            modelShader.setMatrix4("model", model);
+            modelO->draw(modelShader);
 
             // glfw: обмен содержимым front- и back- буферов. Отслеживание событий ввода/вывода (была ли нажата/отпущена кнопка, перемещен курсор мыши и т.п.)
             glfwSwapBuffers(window);
