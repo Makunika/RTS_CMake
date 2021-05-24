@@ -61,6 +61,15 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
+float near = 0.1;
+float far  = 100.0;
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // обратно к NDC
+    return (2.0 * near * far) / (far + near - z * (far - near));
+}
+
 void main()
 {
     // Свойства
@@ -78,6 +87,7 @@ void main()
     // Этап №3: Прожектор
     result += calcSpotLight(spotLight, norm, FragPos, viewDir);
 
+    float depth = LinearizeDepth(gl_FragCoord.z) / far; // делим на far для наглядности
     FragColor = vec4(result, 1.0);
 }
 

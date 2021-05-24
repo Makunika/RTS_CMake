@@ -18,12 +18,12 @@ void main()
 {
     TexCoords = aTexCoords;
     FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = vec3(model * vec4(aNormal, 1.0));
+    Normal = normalize(mat3(transpose(inverse(model))) * aNormal);
 
     vec3 T = normalize(vec3(model * vec4(aTangent,   0.0)));
     vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(aNormal,    0.0)));
-    mat3 TBN = mat3(T, B, N);
+    TBN = mat3(T, B, N);
 
     gl_Position = projection * view * vec4(FragPos, 1.0);
 }

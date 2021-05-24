@@ -15,20 +15,20 @@ void toggleCursor(GLFWwindow* window)
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (currentState->firstMouse)
-    {
-        currentState->lastX = xpos;
-        currentState->lastY = ypos;
-        currentState->firstMouse = false;
-    }
-
-    float xoffset = xpos - currentState->lastX;
-    float yoffset = currentState->lastY - ypos; // ïåðåâåðíóòî, òàê êàê y-êîîðäèíàòû èäóò ñíèçó ââåðõ
-
-    currentState->lastX = xpos;
-    currentState->lastY = ypos;
-
-    currentState->camera->processMouseMovement(xoffset, yoffset);
+//    if (currentState->firstMouse)
+//    {
+//        currentState->lastX = xpos;
+//        currentState->lastY = ypos;
+//        currentState->firstMouse = false;
+//    }
+//
+//    float xoffset = xpos - currentState->lastX;
+//    float yoffset = currentState->lastY - ypos; // Ð¿ÐµÑ€ÐµÐ²ÐµÑ€Ð½ÑƒÑ‚Ð¾, Ñ‚Ð°Ðº ÐºÐ°Ðº y-ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¸Ð´ÑƒÑ‚ ÑÐ½Ð¸Ð·Ñƒ Ð²Ð²ÐµÑ€Ñ…
+//
+//    currentState->lastX = xpos;
+//    currentState->lastY = ypos;
+//
+//    currentState->camera->processMouseMovement(xoffset, yoffset);
 }
 
 void resizeCallback(GLFWwindow* window, int width, int height)
@@ -41,7 +41,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    currentState->camera->processMouseScroll(yoffset);
+    currentState->camera->processMouseScroll(yoffset, currentState->deltaTime);
 }
 
 

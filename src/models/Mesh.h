@@ -67,7 +67,8 @@ inline void Mesh::draw(Shader& shader)
         else if (name == "texture_height")
             number = std::to_string(heightNr++);
 
-        shader.setFloat(name + number, i);
+        glUniform1i(glGetUniformLocation(shader.Program, (name + number).c_str()), i);
+
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);

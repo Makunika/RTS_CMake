@@ -18,9 +18,9 @@ public:
         loadModel(path);
     }
     void draw(Shader& shader);
+    void drawSelected(Shader& shader, Shader &coloringShader);
 private:
 
-    // ������ ������
     vector<Texture_> textures_loaded;
     vector<Mesh> meshes;
     string directory;
@@ -35,8 +35,30 @@ private:
 
 inline void Model::draw(Shader& shader)
 {
+    shader.use();
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].draw(shader);
+}
+
+inline void Model::drawSelected(Shader &shader, Shader &coloringShader) {
+    shader.use();
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilMask(0xFF);
+
+    for (unsigned int i = 0; i < meshes.size(); i++)
+        meshes[i].draw(shader);
+
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDisable(GL_DEPTH_TEST);
+    coloringShader.use();
+
+    for (unsigned int i = 0; i < meshes.size(); i++)
+        meshes[i].draw(coloringShader);
+
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glEnable(GL_DEPTH_TEST);
 }
 
 inline void Model::loadModel(string path)
