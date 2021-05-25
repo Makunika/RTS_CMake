@@ -9,7 +9,7 @@
 class GameObject {
 protected:
     Model* model;
-    Collider* collider;
+    vector<Collider*> colliders;
     State* state;
     float x, y;
     int zLevel;
@@ -17,7 +17,7 @@ protected:
     bool isSelected;
 
 public:
-    GameObject(Model *model, Collider *collider, float x, float y, int zLevel, float scale, State* state);
+    GameObject(Model *model,float x, float y, int zLevel, float scale, State* state);
     bool collide(GameObject* gameObject);
     void draw(Shader& shader, Shader& coloringShader);
     void setSelected(bool selected);

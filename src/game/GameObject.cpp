@@ -6,8 +6,8 @@
 #include <limits>
 #include <glm/gtx/intersect.hpp>
 
-GameObject::GameObject(Model *model, Collider *collider, float x, float y, int zLevel, float scale, State* state) : model(model),
-                                                                                         collider(collider), x(x), y(y),
+GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale, State* state) : model(model),
+                                                                                         x(x), y(y),
                                                                                          zLevel(zLevel), scale(scale), state(state),
                                                                                          isSelected(false) {}
 
@@ -50,6 +50,7 @@ void GameObject::setSelected(bool selected) {
 }
 
 bool GameObject::intersectionRay(glm::vec3 &direction, glm::vec3& start, float& dist) {
+
     bool b =  glm::intersectRaySphere(start, direction, glm::vec3(x, 0.0f + 1.0f * zLevel, y), 0.5,dist);
     if (b) {
         std::cout << "dist: " << dist << std::endl;
