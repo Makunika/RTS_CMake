@@ -38,19 +38,6 @@ glm::vec2 MousePicker::getNormalizedDeviceCoord(float mouseX, float mouseY) {
     return glm::vec2(x, y);
 }
 
-glm::vec4 MousePicker::toEyeCoords(glm::vec4 &clipCoords) {
-    glm::mat4 invertedProjection = glm::inverse(state->getProjection());
-    glm::vec4 eyeCoords = invertedProjection * clipCoords;
-    return glm::vec4(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
-}
-
-glm::vec3 MousePicker::toWorldCoords(glm::vec4 &eyeCoords) {
-    glm::mat4 invertedView = glm::inverse(state->camera->getViewMatrix());
-    glm::vec4 rayWorld = invertedView * eyeCoords;
-    glm::vec3 mouseRay = glm::vec3(rayWorld.x, rayWorld.y, rayWorld.z);
-    return glm::normalize(mouseRay);
-}
-
 void MousePicker::update() {
     currentRay = calculateMouseRay();
 }

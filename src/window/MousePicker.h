@@ -21,8 +21,6 @@ public:
 private:
     glm::vec3 calculateMouseRay();
     glm::vec2 getNormalizedDeviceCoord(float mouseX, float mouseY);
-    glm::vec4 toEyeCoords(glm::vec4& clipCoords);
-    glm::vec3 toWorldCoords(glm::vec4& eyeCoords);
 
 
 };

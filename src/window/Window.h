@@ -123,7 +123,9 @@ public:
         //Model* modelO = new Model(Utils::getResourcesPathString() + "objects\\backpack\\backpack.obj");
         vector<Tank*> tanks;
         tanks.push_back(new Tank(0.0f, 0.0f, 0, 0.2f, state));
-        tanks.push_back(new Tank(1.0f, 1.0f, 1, 0.2f, state));
+        tanks.push_back(new Tank(1.0f, 1.0f, 0, 0.2f, state));
+        glm::vec2 point = glm::vec2(5.0f, 5.0f);
+        tanks.at(1)->moveTo(1.0f / 60, point);
 
 
 
@@ -170,6 +172,32 @@ public:
                         }
                     }
                 }
+            }
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+                mousePicker->update();
+                glm::vec3 ray = mousePicker->getCurrentRay();
+                glm::vec3 N = glm::vec3(0.0f, 1.0f, 0.0f);
+                glm::vec3 p = glm::vec3(1.0f, 0.0f, 1.0f);
+                const float eps = 1.0e-5f;
+                float ratio = glm::dot(N, ray);   // косинус нормали с лучом
+               // if (fabs(ratio) < eps) return -1.0f;  // луч параллелен плоскости
+                float d = glm::dot(N, p - state->camera->Position);  // расстояние от плоскости до rayPos по нормали
+                float t =  d / ratio;     // возвращаем расстояние по лучу
+
+                glm::vec3 inters;
+                if (t >= 0.0f) {
+                    inters = state->camera->Position + ray * t; // находим точку пересечения
+                    for (const auto &item : tanks) {
+                        if (item->getIsSelected()) {
+                            glm::vec2 point = glm::vec2(inters.x, inters.z);
+                            item->moveTo(1.0f / 60, point);
+                        }
+                    }
+                }
+            }
+
+            for (const auto &item : tanks) {
+                item->move();
             }
 
 

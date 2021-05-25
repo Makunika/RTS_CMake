@@ -32,16 +32,12 @@ public:
     }
 
     bool intersectRay(Offsets offsets, glm::vec3& start, glm::vec3& direction, float& dist) const {
-        bool b =  glm::intersectRaySphere(
+        return glm::intersectRaySphere(
                 start,
                 direction,
                 glm::vec3(x + offsets.xOffset, 0.0f + 1.0f * offsets.zLevel, y + offsets.yOffset),
-                r,
+                r * r,
                 dist);
-        if (b) {
-            std::cout << "dist: " << dist << std::endl;
-        }
-        return b;
     }
 
     bool intersectCollider(Offsets ownerOffsets, Offsets otherOffsets, Collider* collider, float& dist) const {
