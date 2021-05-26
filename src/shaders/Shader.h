@@ -14,6 +14,8 @@ public:
 
     Shader(const GLchar* name);
 
+    Shader(const GLchar* name, bool withGeom);
+
     void use();
 
     GLint getUniformLocation(std::string uniform);
@@ -26,10 +28,15 @@ public:
 
     void setVec3(std::string uniform, glm::vec3& vec3);
 
+    void setVec2(std::string uniform, glm::vec2& vec2);
+
+    void setVec2(std::string uniform, GLfloat value1, GLfloat value2);
+
     void setProjectionAndView(glm::mat4& proj, glm::mat4& view);
 
     void setMatrix4(std::string uniform, glm::mat4& matrix);
 
 	void setInt(std::string uniform, int value);
+
 };
 

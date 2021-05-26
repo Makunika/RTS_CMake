@@ -74,6 +74,7 @@ public:
         Shader modelShader("model_test");
         Shader singleColor("singleColor");
         Shader screenShader("screenShader");
+        Shader selectQuadShader("selectQuadShader", true);
         screenShader.use();
         screenShader.setInt("screenTexture", 0);
 
@@ -83,6 +84,8 @@ public:
 
         vector<float> q = ShaderUtils::getQuad();
         VAO_VBO vScreen = ShaderUtils::load2vec2(&q[0], q.size());
+        vector<float> pointf = { 0.0f, 0.0f };
+        VAO_VBO vPoint = ShaderUtils::loadvec2(&pointf[0], pointf.size());
 
         glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
@@ -141,6 +144,8 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         mousePicker = new MousePicker(state);
+        bool check = false;
+        double lastX, lastY;
 
         while (!glfwWindowShouldClose(window))
         {
@@ -149,30 +154,87 @@ public:
             state->deltaTime = currentFrame - state->lastFrame;
             state->lastFrame = currentFrame;
 
+            //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+            glEnable(GL_DEPTH_TEST);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+            glStencilMask(0x00); // убеждаемся, что мы не обновляем буфер трафарета во время рисования пола
+
             // Обработка ввода
             processInput();
-            //std::cout << m.x << " " << m.y << " " << m.z <<  std::endl;
 
+            //Селектинг
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                mousePicker->update();
-                glm::vec3 ray = mousePicker->getCurrentRay();
-                Tank* lastTank = nullptr;
-                float dist;
-                float minDist = 1000000000;
-                for (const auto &item : tanks)  {
-                    item->setSelected(false);
-                    if (item->intersectionRay(ray, state->camera->Position, dist)) {
-                        if (dist < minDist) {
-                            minDist = dist;
-                            if (lastTank != nullptr) {
-                                lastTank->setSelected(false);
+                if (!check) {
+                    for (const auto &item : tanks) {
+                        item->setSelected(false);
+                    }
+                    glfwGetCursorPos(window, &lastX, &lastY);
+                }
+                check = true;
+
+                double mouseX, mouseY;
+                glfwGetCursorPos(state->window, &mouseX, &mouseY);
+
+                if (!(abs(mouseX - lastX) < 2 || abs(mouseY - lastY) < 2)) {
+
+                    glm::vec2 translate = mousePicker->getNormalizedDeviceCoord(lastX, lastY);
+                    glm::vec2 size = translate - mousePicker->getNormalizedDeviceCoord(mouseX, mouseY);
+
+                    selectQuadShader.use();
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, glm::vec3(translate.x, translate.y, 0.0f));
+                    selectQuadShader.setMatrix4("model", model);
+                    selectQuadShader.setVec2("size", size);
+                    glBindVertexArray(vPoint.VAO);
+                    glDrawArrays(GL_POINTS, 0, 1);
+                }
+            } else {
+                if (check) {
+                    double mouseX, mouseY;
+                    glfwGetCursorPos(state->window, &mouseX, &mouseY);
+                    if (!(abs(mouseX - lastX) < 2 || abs(mouseY - lastY) < 2)) {
+                        //множественный выбор
+                        mousePicker->updateArea(lastX, lastY);
+                        vector<glm::vec3> rays = mousePicker->getCurrentRaysArea();
+                        float dist;
+                        for (const auto &tank : tanks) {
+                            for (const auto &ray : rays) {
+                                glm::vec3 r = ray;
+                                if (tank->intersectionRay(r, state->camera->Position, dist)) {
+                                    tank->setSelected(true);
+                                }
                             }
-                            lastTank = item;
-                            item->setSelected(true);
+                        }
+                    } else {
+                        //Одиночный выбор
+                        mousePicker->update();
+                        glm::vec3 ray = mousePicker->getCurrentRay();
+                        Tank* lastTank = nullptr;
+                        float dist;
+                        float minDist = 1000000000;
+                        for (const auto &item : tanks)  {
+                            item->setSelected(false);
+                            if (item->intersectionRay(ray, state->camera->Position, dist)) {
+                                if (dist < minDist) {
+                                    minDist = dist;
+                                    if (lastTank != nullptr) {
+                                        lastTank->setSelected(false);
+                                    }
+                                    lastTank = item;
+                                    item->setSelected(true);
+                                }
+                            }
                         }
                     }
+
                 }
+                check = false;
             }
+
+
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 mousePicker->update();
                 glm::vec3 ray = mousePicker->getCurrentRay();
@@ -202,13 +264,6 @@ public:
 
 
             // Рендеринг
-            //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-            glEnable(GL_DEPTH_TEST);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-            glStencilMask(0x00); // убеждаемся, что мы не обновляем буфер трафарета во время рисования пола
 
             glm::mat4 projection = state->getProjection();
             // Убеждаемся, что активировали шейдер прежде, чем настраивать uniform-переменные/объекты_рисования

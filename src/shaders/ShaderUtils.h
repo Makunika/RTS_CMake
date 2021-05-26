@@ -125,6 +125,19 @@ public:
         return vao_vbo;
     }
 
+    static VAO_VBO loadvec2(float vertices[], int size)
+    {
+        VAO_VBO vao_vbo;
+        glGenVertexArrays(1, &vao_vbo.VAO);
+        glGenBuffers(1, &vao_vbo.VBO);
+        glBindVertexArray(vao_vbo.VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, vao_vbo.VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, vertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        return vao_vbo;
+    }
+
     static vector<float> getQuad()
     {
         return vector<float>

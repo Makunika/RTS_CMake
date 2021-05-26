@@ -12,10 +12,7 @@ const glm::vec3 &MousePicker::getCurrentRay() const {
     return currentRay;
 }
 
-glm::vec3 MousePicker::calculateMouseRay() {
-    double mouseX, mouseY;
-    glfwGetCursorPos(state->window, &mouseX, &mouseY);
-
+glm::vec3 MousePicker::calculateMouseRay(double mouseX, double mouseY) {
     glm::vec2 ray_nds = getNormalizedDeviceCoord(mouseX, mouseY);
     glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
     glm::mat4 invProjMat = glm::inverse(state->getProjection());
@@ -39,5 +36,54 @@ glm::vec2 MousePicker::getNormalizedDeviceCoord(float mouseX, float mouseY) {
 }
 
 void MousePicker::update() {
-    currentRay = calculateMouseRay();
+    double mouseX, mouseY;
+    glfwGetCursorPos(state->window, &mouseX, &mouseY);
+    currentRay = calculateMouseRay(mouseX, mouseY);
+}
+
+void MousePicker::updateArea(double lastX, double lastY) {
+    currentRaysArea.clear();
+    double mouseX, mouseY;
+    glfwGetCursorPos(state->window, &mouseX, &mouseY);
+
+    if (abs(mouseX - lastX) < 20 || abs(mouseY - lastY) < 20) {
+        return;
+    }
+
+    double startX, startY, endX, endY;
+    if (lastX < mouseX && lastY > mouseY) {
+        //справа вверх
+        startX = lastX;
+        startY = mouseY;
+        endX = mouseX;
+        endY = lastY;
+    } else if (lastX < mouseX && lastY < mouseY) {
+        //справа вниз
+        startX = lastX;
+        startY = lastY;
+        endX = mouseX;
+        endY = mouseY;
+    } else if (lastX > mouseX && lastY > mouseY) {
+        //слева вверх
+        startX = mouseX;
+        startY = mouseY;
+        endX = lastX;
+        endY = lastY;
+    } else if (lastX > mouseX && lastY < mouseY) {
+        //слева вниз
+        startX = mouseX;
+        startY = lastY;
+        endX = lastX;
+        endY = mouseY;
+    }
+
+    for (int i = startX; i < endX; i+=20) {
+        for (int j = startY; j < endY; j+=20) {
+            currentRaysArea.push_back(calculateMouseRay(i, j));
+        }
+    }
+}
+
+const std::vector<glm::vec3> &MousePicker::getCurrentRaysArea() const {
+    return currentRaysArea;
 }
