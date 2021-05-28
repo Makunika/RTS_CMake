@@ -20,8 +20,10 @@ public:
     const glm::vec3 &getCurrentRay() const;
     const std::vector<glm::vec3> &getCurrentRaysArea() const;
     void update();
+    void update(double mouseX, double mouseY);
     void updateArea(double lastX, double lastY);
     glm::vec2 getNormalizedDeviceCoord(float mouseX, float mouseY);
+    glm::vec3 calculateWithArea(glm::vec3& ray);
 
 private:
     glm::vec3 calculateMouseRay(double mouseX, double mouseY);

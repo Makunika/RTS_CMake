@@ -52,7 +52,7 @@ be abbreviated or removed later, but missing information can stall bug fixing,
 especially when your schedule doesn't align with that of the maintainer.
 
 __Please provide text as text, not as images__.  This includes code, error
-messages and any other text.  Text in images cannot be found by other users
+messages and any other text.  TextRender in images cannot be found by other users
 searching for the same problem and may have to be re-typed by maintainers when
 debugging.
 

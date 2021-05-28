@@ -15,6 +15,10 @@ public:
 		return R"(..\resources\images\)" + name;
 	}
 
+    static std::string getFontPathString(std::string name) {
+        return R"(..\resources\fonts\)" + name;
+    }
+
 	static std::string getImagePathString() {
 		return R"(..\resources\images\)";
 	}

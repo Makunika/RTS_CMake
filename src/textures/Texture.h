@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "stb_image.h"
+#include "../stb_image.h"
 #include "../utils/Utils.h"
-#include <glad/glad.h>
 using namespace std;
 
 class Texture

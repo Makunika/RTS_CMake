@@ -41,9 +41,14 @@ struct SpotLight {
     float quadratic;
 };
 
-uniform PointLight pointLight;
+#define MAX_LIGHTS 32
+
+uniform PointLight pointLights[MAX_LIGHTS];
+uniform SpotLight spotLights[MAX_LIGHTS];
 uniform DirLight dirLight;
-uniform SpotLight spotLight;
+
+uniform int countPointLights;
+uniform int countSpotLights;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
@@ -64,11 +69,17 @@ void main()
     vec3 spec = vec3(texture(texture_specular1, TexCoords));
     vec3 viewDir = normalize(viewPos - FragPos);
 
-    vec3 result = calcDirLight(dirLight, norm, viewDir, diff, spec);
+    vec3 result = vec3(0.0);
 
-    result += calcPointLight(pointLight, norm, FragPos, viewDir, diff, spec);
+    //vec3 result = calcDirLight(dirLight, norm, viewDir, diff, spec);
 
-    result += calcSpotLight(spotLight, norm, FragPos, viewDir, diff, spec);
+    /*for(int i = 0; i < countPointLights; i++) {
+        result += calcPointLight(pointLights[i], norm, FragPos, viewDir, diff, spec);
+    }*/
+
+    for(int i = 0; i < countSpotLights; i++) {
+        result += calcSpotLight(spotLights[i], norm, FragPos, viewDir, diff, spec);
+    }
 
     FragColor = vec4(result, 1.0);
 }
@@ -126,7 +137,7 @@ vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diff_t, vec3 s
 vec3 calcPointLight(PointLight light, vec3 norm, vec3 fragPos, vec3 viewDir, vec3 diff_t, vec3 spec_t)
 {
 
-    vec3 ambient = pointLight.ambient * diff_t;
+    vec3 ambient = light.ambient * diff_t;
 
     vec3 lightDir = normalize(light.position - fragPos);
     float diff = max(dot(norm, lightDir), 0.0);
@@ -136,8 +147,8 @@ vec3 calcPointLight(PointLight light, vec3 norm, vec3 fragPos, vec3 viewDir, vec
     float spec = pow(max(dot(viewDir,reflectDir),0.0),32.0f);
     vec3 specular = light.specular * spec * spec_t;
 
-    float distance = length(pointLight.position - fragPos);
-    float attenuation = 1.0 / (light.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
+    float distance = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
     ambient *= attenuation;
     diffuse *= attenuation;

@@ -10,7 +10,6 @@ class GameObject {
 protected:
     Model* model;
     vector<Collider*> colliders;
-    State* state;
     float x, y;
     int zLevel;
     float scale;
@@ -20,11 +19,11 @@ protected:
     float angle;
 
 public:
-    GameObject(Model *model,float x, float y, int zLevel, float scale, State* state);
+    GameObject(Model *model,float x, float y, int zLevel, float scale);
     bool collide(GameObject* gameObject);
     bool collide(glm::vec2& point);
     void addCollider(Collider* collider);
-    void draw(Shader& shader, Shader& coloringShader);
+    void draw(Shader* shader, Shader* coloringShader);
     void setSelected(bool selected);
     bool getIsSelected();
     bool intersectionRay(glm::vec3 &direction, glm::vec3& start, float& dist);

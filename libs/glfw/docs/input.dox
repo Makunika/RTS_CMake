@@ -186,7 +186,7 @@ The `GLFW_KEY_LAST` constant holds the highest value of any
 [named key](@ref keys).
 
 
-@subsection input_char Text input
+@subsection input_char TextRender input
 
 GLFW supports text input in the form of a stream of
 [Unicode code points](https://en.wikipedia.org/wiki/Unicode), as produced by the

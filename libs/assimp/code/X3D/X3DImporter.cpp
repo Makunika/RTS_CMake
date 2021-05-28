@@ -349,8 +349,8 @@ void X3DImporter::XML_CheckNode_SkipUnsupported(const std::string& pParentNodeNa
 	    "FillProperties", "LineProperties", "TwoSidedMaterial",
 	    // Sound component
 	    "AudioClip", "Sound",
-	    // Text component
-	    "FontStyle", "Text",
+	    // TextRender component
+	    "FontStyle", "TextRender",
 	    // Texturing3D Component
 	    "ComposedTexture3D", "ImageTexture3D", "PixelTexture3D", "TextureCoordinate3D", "TextureCoordinate4D", "TextureTransformMatrix3D", "TextureTransform3D",
 	    // Texturing component

@@ -644,7 +644,7 @@ private:
 	//! \param source: begin of the text (without byte order mark)
 	//! \param pointerToStore: pointer to text data block which can be
 	//! stored or deleted based on the nesessary conversion.
-	//! \param sizeWithoutHeader: Text size in characters without header
+	//! \param sizeWithoutHeader: TextRender size in characters without header
 	template<class src_char_type>
 	void convertTextData(src_char_type* source, char* pointerToStore, int sizeWithoutHeader)
 	{

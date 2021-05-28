@@ -194,7 +194,7 @@ namespace io
 		//! End of an xml element, like </foo>
 		EXN_ELEMENT_END,
 
-		//! Text within a xml element: <foo> this is the text. </foo>
+		//! TextRender within a xml element: <foo> this is the text. </foo>
 		EXN_TEXT,
 
 		//! An xml comment like &lt;!-- I am a comment --&gt; or a DTD definition.

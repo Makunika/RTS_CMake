@@ -619,7 +619,7 @@
 											</object>
 											<object class="NSMenuItem" id="185339471">
 												<reference key="NSMenu" ref="151108072"/>
-												<string key="NSTitle">Text Replacement</string>
+												<string key="NSTitle">TextRender Replacement</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="385016679"/>
@@ -997,14 +997,14 @@
 								</object>
 								<object class="NSMenuItem" id="845238482">
 									<reference key="NSMenu" ref="409736166"/>
-									<string key="NSTitle">Text</string>
+									<string key="NSTitle">TextRender</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
 									<reference key="NSMixedImage" ref="150129030"/>
 									<string key="NSAction">submenuAction:</string>
 									<object class="NSMenu" key="NSSubmenu" id="939204249">
-										<string key="NSTitle">Text</string>
+										<string key="NSTitle">TextRender</string>
 										<object class="NSMutableArray" key="NSMenuItems">
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<object class="NSMenuItem" id="612516954">

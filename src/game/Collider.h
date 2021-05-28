@@ -5,6 +5,7 @@
 #include "../shaders/ShaderUtils.h"
 #include "../shaders/Shader.h"
 #include "../state/State.h"
+#include "../resource/ResourceManager.h"
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
@@ -72,7 +73,7 @@ public:
 
     void drawDebug(float ownerX, float ownerY, int ownerZLevel) {
         if (debugShader == nullptr) {
-            debugShader = new Shader("debugShader");
+            debugShader = ResourceManager::loadShader("debugShader");
         }
 
         debugShader->use();

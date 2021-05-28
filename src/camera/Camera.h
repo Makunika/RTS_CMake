@@ -87,7 +87,7 @@ public:
         //Position.y = 0.0f; 
     }
 
-    void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)
     {
         //std::cout << xoffset << " " << yoffset << std::endl;
         xoffset *= MouseSensitivity;

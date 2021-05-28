@@ -87,3 +87,23 @@ void MousePicker::updateArea(double lastX, double lastY) {
 const std::vector<glm::vec3> &MousePicker::getCurrentRaysArea() const {
     return currentRaysArea;
 }
+
+void MousePicker::update(double mouseX, double mouseY) {
+    currentRay = calculateMouseRay(mouseX, mouseY);
+}
+
+glm::vec3 MousePicker::calculateWithArea(glm::vec3 &ray) {
+    glm::vec3 N = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 p = glm::vec3(1.0f, 0.0f, 1.0f);
+    const float eps = 1.0e-5f;
+    float ratio = glm::dot(N, ray);   // косинус нормали с лучом
+    float d = glm::dot(N, p - state->camera->Position);  // расстояние от плоскости до rayPos по нормали
+    float t =  d / ratio;     // возвращаем расстояние по лучу
+
+    glm::vec3 inters;
+    if (t >= 0.0f) {
+        inters = state->camera->Position + ray * t;
+        return inters;
+    }
+    return glm::vec3(0.0f);
+}

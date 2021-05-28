@@ -6,9 +6,9 @@
 #include <limits>
 #include <glm/gtx/intersect.hpp>
 
-GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale, State* state) : model(model),
+GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale) : model(model),
                                                                                          x(x), y(y),
-                                                                                         zLevel(zLevel), scale(scale), state(state),
+                                                                                         zLevel(zLevel), scale(scale),
                                                                                          isSelected(false)
 {
     speed = glm::vec2(0.0f);
@@ -35,9 +35,9 @@ bool GameObject::collide(GameObject *gameObject) {
     return false;
 }
 
-void GameObject::draw(Shader &shader, Shader& coloringShader) {
+void GameObject::draw(Shader* shader, Shader* coloringShader) {
    // std::cout << *this << std::endl;
-    coloringShader.use();
+    coloringShader->use();
     glm::mat4 modelS = glm::mat4(1.0f);
     modelS = glm::translate(modelS, glm::vec3(x, 0.0f + 1.0 * zLevel, y));
     modelS = glm::scale(modelS, glm::vec3(scale + scale * 0.1f));
@@ -45,9 +45,9 @@ void GameObject::draw(Shader &shader, Shader& coloringShader) {
         angle = glm::atan(speed.x, speed.y);
     }
     modelS = glm::rotate(modelS, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-    coloringShader.setMatrix4("model", modelS);
+    coloringShader->setMatrix4("model", modelS);
 
-    shader.use();
+    shader->use();
     modelS = glm::mat4(1.0f);
     modelS = glm::translate(modelS, glm::vec3(x, 0.0f + 1.0 * zLevel, y));
     modelS = glm::scale(modelS, glm::vec3(scale));
@@ -55,11 +55,11 @@ void GameObject::draw(Shader &shader, Shader& coloringShader) {
         angle = glm::atan(speed.x, speed.y);
     }
     modelS = glm::rotate(modelS, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-    shader.setMatrix4("model", modelS);
+    shader->setMatrix4("model", modelS);
     if (isSelected) {
-        model->drawSelected(shader, coloringShader);
+        model->drawSelected(*shader, *coloringShader);
     } else {
-        model->draw(shader);
+        model->draw(*shader);
     }
 
     for (const auto &collider : colliders)

@@ -24,22 +24,22 @@ with ZLib; use ZLib;
 
 procedure Buffer_Demo is
    EOL  : Character renames ASCII.LF;
-   Text : constant String
+   TextRender : constant String
      := "Four score and seven years ago our fathers brought forth," & EOL &
         "upon this continent, a new nation, conceived in liberty," & EOL &
         "and dedicated to the proposition that `all men are created equal'.";
 
-   Source : Stream_Element_Array (1 .. Text'Length);
-   for Source'Address use Text'Address;
+   Source : Stream_Element_Array (1 .. TextRender'Length);
+   for Source'Address use TextRender'Address;
 
 begin
-   Ada.Text_IO.Put (Text);
+   Ada.Text_IO.Put (TextRender);
    Ada.Text_IO.New_Line;
    Ada.Text_IO.Put_Line
-     ("Uncompressed size : " & Positive'Image (Text'Length) & " bytes");
+     ("Uncompressed size : " & Positive'Image (TextRender'Length) & " bytes");
 
    declare
-      Compressed_Data : Stream_Element_Array (1 .. Text'Length);
+      Compressed_Data : Stream_Element_Array (1 .. TextRender'Length);
       L               : Stream_Element_Offset;
    begin
       Compress : declare
@@ -68,7 +68,7 @@ begin
       Decompress : declare
          Decompressor : Filter_Type;
 
-         Uncompressed_Data : Stream_Element_Array (1 .. Text'Length);
+         Uncompressed_Data : Stream_Element_Array (1 .. TextRender'Length);
 
          Block_Size : constant := 4;
          --  This makes sure that the last block contains

@@ -5,20 +5,22 @@
 #include "Tank.h"
 #include "../utils/Utils.h"
 
-Model* tankModel = nullptr;
-
 Tank::Tank(float x, float y, int zLevel, float scale, State* state): GameObject(
-        !isInit ? new Model(Utils::getResourcesPathString() + "objects\\backpack\\backpack.obj") : tankModel,
+        ResourceManager::loadModel(Utils::getResourcesPathString() + "objects\\backpack\\backpack.obj"),
         x,
         y,
         zLevel,
-        scale,
-        state) {
-    if (!isInit) {
-        tankModel = this->model;
-    }
-    isInit = true;
+        scale) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
+    if (modelShader == nullptr) {
+        modelShader = ResourceManager::loadShader("model_test");
+    }
+    if (selectedShader == nullptr) {
+        selectedShader = ResourceManager::loadShader("singleColor");
+    }
+
 }
 
 bool Tank::isInit = false;
+Shader* Tank::modelShader = nullptr;
+Shader* Tank::selectedShader = nullptr;
