@@ -10,7 +10,8 @@ Tank::Tank(float x, float y, int zLevel, float scale, State* state): GameObject(
         x,
         y,
         zLevel,
-        scale) {
+        scale,
+        1.0f / 60) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
     if (modelShader == nullptr) {
         modelShader = ResourceManager::loadShader("model_test");

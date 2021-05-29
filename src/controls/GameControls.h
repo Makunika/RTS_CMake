@@ -15,6 +15,7 @@ class GameControls {
     bool check2;
     double lastX, lastY;
     Shader* selectQuadShader;
+    Shader* lineShader;
     VAO_VBO vPoint;
     glm::vec3 rayMoveTo;
 

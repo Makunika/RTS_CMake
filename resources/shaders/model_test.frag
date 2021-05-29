@@ -69,13 +69,11 @@ void main()
     vec3 spec = vec3(texture(texture_specular1, TexCoords));
     vec3 viewDir = normalize(viewPos - FragPos);
 
-    vec3 result = vec3(0.0);
+    vec3 result = calcDirLight(dirLight, norm, viewDir, diff, spec);
 
-    //vec3 result = calcDirLight(dirLight, norm, viewDir, diff, spec);
-
-    /*for(int i = 0; i < countPointLights; i++) {
+    for(int i = 0; i < countPointLights; i++) {
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir, diff, spec);
-    }*/
+    }
 
     for(int i = 0; i < countSpotLights; i++) {
         result += calcSpotLight(spotLights[i], norm, FragPos, viewDir, diff, spec);

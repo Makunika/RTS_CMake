@@ -81,6 +81,14 @@ public:
         }
 
 
+        if (Position.x > 25.0f)
+            Position.x = 25.0f;
+        if (Position.x < -25.0f)
+            Position.x = -25.f;
+        if (Position.z > 25.0f)
+            Position.z = 25.0f;
+        if (Position.z < -25.0f)
+            Position.z = -25.f;
 
 
 
@@ -142,7 +150,7 @@ public:
     }
 
     void processMouse(int w, int h, double x, double y, float deltaTime) {
-        const float velocity = MovementSpeed * deltaTime;
+        const float velocity = MovementSpeed * deltaTime * 4.0f;
         if (y < 10)
             Position += glm::vec3(Front.x, 0.0f, Front.z) * velocity;
         if (y > h - 10)
@@ -151,6 +159,15 @@ public:
             Position -= Right * velocity;
         if (x > w - 10)
             Position += Right * velocity;
+
+        if (Position.x > 25.0f)
+            Position.x = 25.0f;
+        if (Position.x < -25.0f)
+            Position.x = -25.f;
+        if (Position.z > 25.0f)
+            Position.z = 25.0f;
+        if (Position.z < -25.0f)
+            Position.z = -25.f;
     }
 
 private:

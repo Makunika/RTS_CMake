@@ -31,7 +31,7 @@ void Game::initLight() {
             );
     spotLight = new SpotLight(
             glm::vec3(0.2f, 0.2f, 0.2f),
-            glm::vec3(12.5f, 2.5f, 2.5f),
+            glm::vec3(2.5f, 2.5f, 2.5f),
             glm::vec3(3.0f, 3.0f, 3.0f),
             gameState->state->camera->Position,
             gameState->state->camera->Front,
@@ -56,6 +56,12 @@ void Game::initLight() {
 void Game::initObjects() {
     gameState->addTank(new Tank(0.0f, 0.0f, 0, 0.2f, gameState->state));
     gameState->addTank(new Tank(1.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(2.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(3.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(4.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(5.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(6.0f, 1.0f, 0, 0.2f, gameState->state));
+    gameState->addTank(new Tank(7.0f, 1.0f, 0, 0.2f, gameState->state));
 }
 
 void Game::update() {
@@ -80,7 +86,7 @@ void Game::draw() {
     Tank::selectedShader->setProjectionAndView(proj, view);
 
     for (const auto &tank : gameState->tanks) {
-        tank->draw(Tank::modelShader, Tank::modelShader);
+        tank->draw(Tank::modelShader, Tank::selectedShader);
     }
 }
 

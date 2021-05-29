@@ -16,10 +16,12 @@ protected:
     bool isSelected;
     glm::vec2 speed;
     glm::vec2 point;
+    float speedValue;
     float angle;
+    float anglePostMove;
 
 public:
-    GameObject(Model *model,float x, float y, int zLevel, float scale);
+    GameObject(Model *model,float x, float y, int zLevel, float scale, float speed);
     bool collide(GameObject* gameObject);
     bool collide(glm::vec2& point);
     void addCollider(Collider* collider);
@@ -28,7 +30,8 @@ public:
     bool getIsSelected();
     bool intersectionRay(glm::vec3 &direction, glm::vec3& start, float& dist);
     void move();
-    void moveTo(float speed, glm::vec2& point);
+    void moveTo(glm::vec2 &point);
+    void moveTo(glm::vec2 &point, float anglePostMove);
 
     friend ostream &operator<<(ostream &os, const GameObject &object);
 };

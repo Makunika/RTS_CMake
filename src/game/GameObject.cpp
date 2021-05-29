@@ -6,14 +6,15 @@
 #include <limits>
 #include <glm/gtx/intersect.hpp>
 
-GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale) : model(model),
+GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale, float speed) : model(model),
                                                                                          x(x), y(y),
                                                                                          zLevel(zLevel), scale(scale),
-                                                                                         isSelected(false)
+                                                                                         isSelected(false), speedValue(speed)
 {
-    speed = glm::vec2(0.0f);
+    this->speed = glm::vec2(0.0f);
     point = glm::vec2(0.0f);
     angle = 0;
+    anglePostMove = -1234;
 }
 
 bool GameObject::collide(GameObject *gameObject) {
@@ -62,8 +63,8 @@ void GameObject::draw(Shader* shader, Shader* coloringShader) {
         model->draw(*shader);
     }
 
-    for (const auto &collider : colliders)
-        collider->drawDebug(this->x, this->y, this->zLevel);
+//    for (const auto &collider : colliders)
+//        collider->drawDebug(this->x, this->y, this->zLevel);
 }
 
 ostream &operator<<(ostream &os, const GameObject &object) {
@@ -107,6 +108,11 @@ void GameObject::move() {
     if (speed.x != 0 && speed.y !=0 && collide(point)) {\
         std::cout << "ok point!: " << point.x << " " << point.y << std::endl;
         speed = glm::vec2(0.0f);
+
+        if (anglePostMove != -1234) {
+            angle = anglePostMove;
+        }
+        anglePostMove = -1234;
     }
 }
 
@@ -137,11 +143,16 @@ bool GameObject::collide(glm::vec2 &point) {
     return false;
 }
 
-void GameObject::moveTo(float speed, glm::vec2 &point) {
-    this->speed = glm::normalize(point - glm::vec2(x,y)) * speed;
+void GameObject::moveTo(glm::vec2 &point) {
+    this->speed = glm::normalize(point - glm::vec2(x,y)) * speedValue;
     this->point = glm::vec2(point.x, point.y);
 }
 
 bool GameObject::getIsSelected() {
     return isSelected;
+}
+
+void GameObject::moveTo(glm::vec2 &point, float anglePostMove) {
+    moveTo(point);
+    this->anglePostMove = anglePostMove;
 }

@@ -72,6 +72,32 @@ public:
 
 	void run()
 	{
+        glm::vec3 center = glm::vec3(1.0f, 0.0f, 1.0f);
+        glm::vec3 dir = glm::vec3(2.0f, 0.0f, -2.0f);
+        vector<glm::vec2> points;
+        for (int i = 0; i < 2; ++i) {
+            if (i == 0 || i % 3 == 0) {
+                glm::vec2 point = glm::vec2(center.x, center.z + i / 3 * 1.0f);
+                points.push_back(point);
+            }
+            if (i % 3 == 1) {
+                glm::vec2 point = glm::vec2(center.x + 1.5f, center.z + i / 3 * 1.5f);
+                points.push_back(point);
+            }
+            if (i % 3 == 2) {
+                glm::vec2 point = glm::vec2(center.x - 1.5f, center.z + i / 3 * 1.5f);
+                points.push_back(point);
+            }
+        }
+        glm::vec2 centerPoint = points.at(0);
+        std::cout << centerPoint.x << " " << centerPoint.y << std::endl;
+        float angle = glm::atan(dir.x, -dir.z);
+        for (int i = 1; i < points.size(); ++i) {
+            glm::vec2 newPoint = glm::rotate(points.at(i) - centerPoint, angle) + centerPoint;
+            std::cout << newPoint.x << " " << newPoint.y << std::endl;
+        }
+
+
         Shader screenShader("screenShader");
         screenShader.use();
         screenShader.setInt("screenTexture", 0);
