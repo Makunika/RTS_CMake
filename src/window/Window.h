@@ -68,6 +68,7 @@ public:
 		glfwSetMouseButtonCallback(window, mouseButtonCallback);
 		glfwSetCursorPosCallback(window, mouseCallback);
 		glfwSetScrollCallback(window, scrollCallback);
+        glfwSetKeyCallback(window, keyCallback);
 	}
 
 	void run()

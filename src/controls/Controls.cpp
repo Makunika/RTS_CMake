@@ -44,6 +44,13 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
     currentState->camera->processMouseScroll(yoffset, currentState->deltaTime);
 }
 
+void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode) {
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+    {
+        currentState->debug = !currentState->debug;
+    }
+}
+
 
 
 

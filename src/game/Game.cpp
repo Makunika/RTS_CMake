@@ -1,7 +1,6 @@
 //
 // Created by pshbl on 22.05.2021.
 //
-
 #include "Game.h"
 
 Game::Game(State *state) {
@@ -16,6 +15,7 @@ Game::Game(State *state) {
 void Game::initScene() {
     initLight();
     initObjects();
+    initFloor();
 }
 
 void Game::initLight() {
@@ -43,9 +43,9 @@ void Game::initLight() {
             );
 
     DirLight* dirLight = new DirLight(
+            glm::vec3(0.1f, 0.1f, 0.1f),
             glm::vec3(0.2f, 0.2f, 0.2f),
             glm::vec3(0.5f, 0.5f, 0.5f),
-            glm::vec3(1.0f, 1.0f, 1.0f),
             glm::vec3(-0.2f, -1.0f, -0.3f)
             );
     lightState->lights.push_back(pointLight);
@@ -65,14 +65,17 @@ void Game::initObjects() {
 }
 
 void Game::update() {
-    spotLight->setDirection(gameState->state->camera->Front);
-    spotLight->setPosition(gameState->state->camera->Position);
+    spotLight->setDirection(gameState->tanks.at(0)->getFront());
+    spotLight->setPosition(gameState->tanks.at(0)->getPosition());
     for (const auto &tank : gameState->tanks) {
         tank->move();
     }
 }
 
 void Game::draw() {
+
+    floor->draw(lightState);
+
     glm::mat4 view = gameState->state->camera->getViewMatrix();
     glm::mat4 proj = gameState->state->getProjection();
 
@@ -88,6 +91,8 @@ void Game::draw() {
     for (const auto &tank : gameState->tanks) {
         tank->draw(Tank::modelShader, Tank::selectedShader);
     }
+
+
 }
 
 void Game::initShaders() {
@@ -108,6 +113,10 @@ LightState *Game::getLightState() const {
 
 GameControls *Game::getGameControls() const {
     return gameControls;
+}
+
+void Game::initFloor() {
+    floor = new Floor(gameState->state);
 }
 
 

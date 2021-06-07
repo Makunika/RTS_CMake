@@ -6,8 +6,8 @@
 #define RTS_TANK_H
 
 #include "GameObject.h"
-#include "../resource/ResourceManager.h"
-#include "../shaders/Shader.h"
+#include "../../resource/ResourceManager.h"
+#include "../../shaders/Shader.h"
 
 class Tank: public GameObject {
 private:

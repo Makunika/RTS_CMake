@@ -10,6 +10,7 @@
 #include "../state/LightState.h"
 #include "../controls/GameControls.h"
 #include "../light/DirLight.h"
+#include "../floor/Floor.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class Game {
     LightState* lightState;
     GameControls* gameControls;
     SpotLight* spotLight;
+    Floor* floor;
 
 public:
     Game(State* state);
@@ -38,6 +40,7 @@ private:
     void initLight();
     void initObjects();
     void initShaders();
+    void initFloor();
 };
 
 

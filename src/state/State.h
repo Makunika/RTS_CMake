@@ -20,6 +20,8 @@ struct State
 	Camera* camera;
 	GLFWwindow* window;
 
+	bool debug = false;
+
 	glm::mat4 getProjection() {
 		return glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 100.0f);
 	}

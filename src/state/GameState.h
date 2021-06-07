@@ -6,7 +6,7 @@
 #define RTS_GAMESTATE_H
 
 #include "State.h"
-#include "../game/Tank.h"
+#include "../game/objects/Tank.h"
 #include "../window/MousePicker.h"
 
 struct GameState {
