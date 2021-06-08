@@ -55,13 +55,13 @@ Floor::Floor(State* state) {
 
     vector<float> q
     {
-        1.0f, -0.5f,  1.0f,  64.0f, 00.0f,
-        -1.0f, -0.5f,  1.0f,  0.0f, 0.0f,
-        -1.0f, -0.5f, -1.0f,  0.0f, 64.0f,
-
         1.0f, -0.5f,  1.0f,  64.0f, 0.0f,
         -1.0f, -0.5f, -1.0f,  0.0f, 64.0f,
-        1.0f, -0.5f, -1.0f,  64.0f, 64.0f
+        1.0f, -0.5f, -1.0f,  64.0f, 64.0f,
+
+        1.0f, -0.5f,  1.0f,  64.0f, 00.0f,
+        -1.0f, -0.5f,  1.0f,  0.0f, 0.0f,
+        -1.0f, -0.5f, -1.0f,  0.0f, 64.0f
     };
     vFloorGlass = ShaderUtils::loadTextureAndCoordinate(&q[0], q.size());
 
@@ -95,11 +95,13 @@ void Floor::draw(LightState* lightState) {
         glBindVertexArray(0);
     }
 
+    glCullFace(GL_FRONT);
 
     shaderGlass->use();
     shaderGlass->setProjectionAndView(p, v);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(64.0f, 1.0f, 64.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
     shaderGlass->setMatrix4("model", model);
     shaderGlass->setFloat("shininess", 64.0f);
     shaderGlass->setVec3("viewPos", state->camera->Position);
@@ -117,6 +119,8 @@ void Floor::draw(LightState* lightState) {
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glBindVertexArray(0);
+
+    glCullFace(GL_BACK);
 }
 
 void Floor::drawForShadow(Shader *shader) {

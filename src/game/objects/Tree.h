@@ -11,7 +11,8 @@
 enum TreeType {
     TREE1,
     TREE2,
-    TREE3
+    TREE3,
+    TREE4
 };
 
 

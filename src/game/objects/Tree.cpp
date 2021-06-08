@@ -17,6 +17,9 @@ Model* getTree(TreeType treeType) {
         case TREE3:
             tree_name = "trees\\tree3\\tree.fbx";
             break;
+        case TREE4:
+            tree_name = "trees\\tree4\\tree.fbx";
+            break;
     }
     return ResourceManager::loadModel(tree_name);
 }
@@ -26,20 +29,23 @@ float getScale(TreeType treeType) {
         case TREE1:
             return 0.005;
         case TREE2:
-            return 0.001;
+            return 0.01;
         case TREE3:
+            return 0.005;
+        case TREE4:
             return 0.005;
     }
 }
 
 
 Tree::Tree(float x, float y, State *state, TreeType treeType)
-: StaticObject(getTree(treeType), x, y, 0, getScale(treeType), state, -0.5f) {
+: StaticObject(getTree(treeType), x, y, 0, getScale(treeType), state) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
     if (modelShader == nullptr) {
         modelShader = ResourceManager::loadShader("tree");
     }
     angleX = -AI_MATH_HALF_PI_F;
+    //angle = (-314 + rand() % 614) / 100.0f;
 }
 
 Shader* Tree::modelShader = nullptr;

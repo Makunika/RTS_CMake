@@ -55,3 +55,7 @@ void GameObject::draw(Shader *shader, Shader *coloringShader) {
     }
     StaticObject::draw(shader, isSelected ? coloringShader : nullptr);
 }
+
+void GameObject::update() {
+    move();
+}

@@ -33,6 +33,7 @@ public:
     bool intersectionRay(glm::vec3 &direction, glm::vec3& start, float& dist);
 
     glm::vec3 getPosition();
+    glm::vec3 getPosition(float offsetX, float offsetY, float offsetZ);
     glm::vec3 getFront();
 
 };

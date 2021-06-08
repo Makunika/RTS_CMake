@@ -21,6 +21,7 @@ public:
     void setSelected(bool selected);
     bool getIsSelected();
     void move();
+    virtual void update();
     void moveTo(glm::vec2 &point);
     void moveTo(glm::vec2 &point, float anglePostMove);
 };

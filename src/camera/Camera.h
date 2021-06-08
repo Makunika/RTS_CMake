@@ -146,6 +146,14 @@ public:
                 Pitch = -65.0f;
         }
 
+        if (Position.y < 1.0f) {
+            Position.y = 1.0f;
+        }
+        if (Position.y > 11.0f) {
+            Position.y = 11.0f;
+        }
+
+
         updateCameraVectors();
     }
 

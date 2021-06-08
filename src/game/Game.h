@@ -19,7 +19,6 @@ class Game {
     GameState* gameState;
     LightState* lightState;
     GameControls* gameControls;
-    SpotLight* spotLight;
     Floor* floor;
 
 public:

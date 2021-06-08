@@ -80,7 +80,7 @@ bool StaticObject::collide(glm::vec2 &point) {
             dist);
 
     if (intersect) {
-        return dist <= 0.01;
+        return dist <= 0.05;
     }
     return false;
 }
@@ -110,7 +110,7 @@ glm::vec3 StaticObject::getPosition() {
 
 glm::vec3 StaticObject::getFront() {
     glm::vec2 dir = glm::rotate(glm::vec2(0.0f, 1.0f), (float)(angle + AI_MATH_PI));
-    return glm::vec3(dir.x, -0.2f, -dir.y);
+    return glm::normalize(glm::vec3(dir.x, -0.2f, -dir.y));
 }
 
 StaticObject::StaticObject(Model *model, float x, float y, int zLevel, float scale, State *state) : model(model), x(x),
@@ -123,4 +123,15 @@ StaticObject::StaticObject(Model *model, float x, float y, int zLevel, float sca
 
 StaticObject::StaticObject(Model *model, float x, float y, int zLevel, float scale, State *state, float offset): StaticObject(model, x, y, zLevel, scale, state) {
     this->offsetZ = offset;
+}
+
+glm::vec3 StaticObject::getPosition(float offsetX, float offsetY, float offsetZ) {
+    glm::vec3 pos = getPosition();
+    glm::vec2 center = glm::vec2(pos.x, pos.z);
+    glm::vec2 point = glm::vec2(offsetX, offsetY);
+
+    glm::vec2 newPoint = glm::rotate(point, (float)(angle + AI_MATH_PI));
+    newPoint.y = -newPoint.y;
+    newPoint = newPoint + center;
+    return glm::vec3(newPoint.x, pos.y + offsetZ, newPoint.y);
 }

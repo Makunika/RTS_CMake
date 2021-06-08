@@ -7,6 +7,7 @@
 
 #include "GameObject.h"
 #include "../../shaders/Shader.h"
+#include "../../light/SpotLight.h"
 
 class Tank: public GameObject {
 private:
@@ -14,7 +15,12 @@ private:
 public:
     static Shader* modelShader;
     static Shader* selectedShader;
-    Tank(float x, float y, int zLevel, float scale, State* state);
+    SpotLight* lightLeft;
+    Tank(float x, float y, int zLevel, State* state);
+
+    glm::vec3 getPositionLightLeft();
+
+    void update() override;
 };
 
 #endif //RTS_TANK_H

@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
+in mat3 TBN;
 
 struct PointLight {
     vec3 position;
@@ -50,7 +51,7 @@ uniform int countPointLights;
 uniform int countSpotLights;
 
 uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
 uniform float shininess;
 uniform vec3 viewPos;
 
@@ -60,9 +61,17 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 
 void main()
 {
-    vec3 norm = normalize(Normal);
-    vec3 diff = vec3(texture(texture_diffuse1,TexCoords));
-    vec3 spec = vec3(texture(texture_specular1, TexCoords));
+    //vec3 norm = normalize(Normal);
+    vec3 norm = texture(texture_normal1, TexCoords).rgb;
+    norm = norm * 2.0 - 1.0;
+    norm = normalize(TBN * norm);
+    vec4 text = texture(texture_diffuse1,TexCoords);
+    vec3 diff = vec3(text);
+
+    if (text.a < 0.1)
+        discard;
+
+    vec3 spec = vec3(0.0);
     vec3 viewDir = normalize(viewPos - FragPos);
 
     vec3 result = calcDirLight(dirLight, norm, viewDir, diff, spec);

@@ -15,6 +15,7 @@ class Model
 public:
     Model(string path)
     {
+        //stbi_set_flip_vertically_on_load(true);
         loadModel(path);
     }
     void draw(Shader& shader);
@@ -205,8 +206,9 @@ inline vector<Texture_> Model::loadMaterialTextures(aiMaterial* mat, aiTextureTy
 inline unsigned int Model::textureFromFile(const char* path, const string& directory)
 {
     string filename = string(path);
-    std::regex e("\\\\\\\\");
-    filename = regex_replace(filename, e, "\\");
+    if (filename.find_last_of('\\') != string::npos) {
+        filename = filename.substr(filename.find_last_of('\\') + 1, filename.length() - 1);
+    }
     filename = directory + "\\" + filename;
 
     unsigned int textureID;
