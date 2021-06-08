@@ -41,6 +41,8 @@ private:
     void initObjects();
     void initShaders();
     void initFloor();
+    void initShadows();
+    void updateShadow();
 };
 
 

@@ -3,10 +3,10 @@
 //
 
 #include "Tank.h"
-#include "../../utils/Utils.h"
+#include "../../resource/ResourceManager.h"
 
 Tank::Tank(float x, float y, int zLevel, float scale, State* state): GameObject(
-        ResourceManager::loadModel(Utils::getResourcesPathString() + "objects\\backpack\\backpack.obj"),
+        ResourceManager::loadModel("backpack\\backpack.obj"),
         x,
         y,
         zLevel,

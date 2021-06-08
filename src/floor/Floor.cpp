@@ -79,8 +79,6 @@ void Floor::draw(LightState* lightState) {
     glm::mat4 p = state->getProjection();
     glm::mat4 v = state->camera->getViewMatrix();
 
-
-
     if (state->debug) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-32.5f, -0.5, -32.5f));
@@ -113,6 +111,20 @@ void Floor::draw(LightState* lightState) {
     glBindTexture(GL_TEXTURE_2D, diff->getTexture());
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, spec->getTexture());
+
+    glBindVertexArray(vFloorGlass.VAO);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindVertexArray(0);
+}
+
+void Floor::drawForShadow(Shader *shader) {
+
+    shader->use();
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::scale(model, glm::vec3(64.0f, 1.0f, 64.0f));
+    shader->setMatrix4("model", model);
 
     glBindVertexArray(vFloorGlass.VAO);
 

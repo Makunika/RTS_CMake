@@ -16,6 +16,7 @@ void Game::initScene() {
     initLight();
     initObjects();
     initFloor();
+    this->initShadows();
 }
 
 void Game::initLight() {
@@ -62,6 +63,19 @@ void Game::initObjects() {
     gameState->addTank(new Tank(5.0f, 1.0f, 0, 0.2f, gameState->state));
     gameState->addTank(new Tank(6.0f, 1.0f, 0, 0.2f, gameState->state));
     gameState->addTank(new Tank(7.0f, 1.0f, 0, 0.2f, gameState->state));
+
+    gameState->addTree(new Tree(0.0f, -1.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(1.0f, -1.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(2.0f, -1.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(3.0f, -1.0f, gameState->state, TREE2));
+    gameState->addTree(new Tree(4.0f, -1.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(5.0f, -1.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(1.0f, -2.0f, gameState->state, TREE2));
+    gameState->addTree(new Tree(2.0f, -2.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(3.0f, -2.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(4.0f, -2.0f, gameState->state, TREE2));
+    gameState->addTree(new Tree(5.0f, -2.0f, gameState->state, TREE1));
+    gameState->addTree(new Tree(6.0f, -2.0f, gameState->state, TREE1));
 }
 
 void Game::update() {
@@ -79,6 +93,17 @@ void Game::draw() {
     glm::mat4 view = gameState->state->camera->getViewMatrix();
     glm::mat4 proj = gameState->state->getProjection();
 
+    Tree::modelShader->use();
+    Tree::modelShader->setProjectionAndView(proj, view);
+    Tree::modelShader->setFloat("shininess", 64.0f);
+    Tree::modelShader->setVec3("viewPos", gameState->state->camera->Position);
+    lightState->allUse(Tree::modelShader);
+
+    for (const auto &tree : gameState->trees) {
+        tree->draw(Tree::modelShader, nullptr);
+    }
+
+
     Tank::modelShader->use();
     Tank::modelShader->setProjectionAndView(proj, view);
     Tank::modelShader->setFloat("shininess", 64.0f);
@@ -91,7 +116,6 @@ void Game::draw() {
     for (const auto &tank : gameState->tanks) {
         tank->draw(Tank::modelShader, Tank::selectedShader);
     }
-
 
 }
 
@@ -117,6 +141,37 @@ GameControls *Game::getGameControls() const {
 
 void Game::initFloor() {
     floor = new Floor(gameState->state);
+}
+
+void Game::initShadows() {
+    // Настраиваем карту глубины FBO
+
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+
+    // Создаем текстуры глубины
+    unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, lightState->SHADOW_WIDTH, lightState->SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // Прикрепляем текстуру глубины в качестве буфера глубины для FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    lightState->depthMap = depthMap;
+    lightState->depthMapFBO = depthMapFBO;
+}
+
+void Game::updateShadow() {
+
 }
 
 

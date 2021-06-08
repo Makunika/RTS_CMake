@@ -3,6 +3,7 @@
 //
 
 #include "ResourceManager.h"
+#include "../utils/Utils.h"
 
 Shader* ResourceManager::loadShader(std::string name) {
     return loadShader(name, false);
@@ -17,6 +18,7 @@ void ResourceManager::clear() {
 }
 
 Model *ResourceManager::loadModel(std::string name) {
+    name = Utils::getResourcesPathString() + "objects\\" + name;
     if (models.contains(name)) {
         return models[name];
     } else {

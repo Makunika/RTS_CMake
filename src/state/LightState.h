@@ -13,7 +13,12 @@ using namespace std;
 
 //Хранить только не двигающийся свет
 struct LightState {
+
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
     vector<Light*> lights;
+    unsigned int depthMapFBO;
+    unsigned int depthMap;
 
     void allUse(Shader* shader) {
         shader->use();

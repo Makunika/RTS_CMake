@@ -9,9 +9,12 @@ void StaticObject::draw(Shader *shader, Shader *coloringShader) {
 
     shader->use();
     glm::mat4 modelS = glm::mat4(1.0f);
-    modelS = glm::translate(modelS, glm::vec3(x, 0.0f + 1.0 * zLevel, y));
+    modelS = glm::translate(modelS, glm::vec3(x, 0.0f + 1.0 * zLevel + offsetZ, y));
     modelS = glm::scale(modelS, glm::vec3(scale));
     modelS = glm::rotate(modelS, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+    if (angleX != 0) {
+        modelS = glm::rotate(modelS, angleX, glm::vec3(1.0f, 0.0f, 0.0f));
+    }
     shader->setMatrix4("model", modelS);
     if (coloringShader != nullptr) {
         coloringShader->use();
@@ -116,4 +119,8 @@ StaticObject::StaticObject(Model *model, float x, float y, int zLevel, float sca
                                                                                                     scale(scale),
                                                                                                     state(state) {
     angle = 0;
+}
+
+StaticObject::StaticObject(Model *model, float x, float y, int zLevel, float scale, State *state, float offset): StaticObject(model, x, y, zLevel, scale, state) {
+    this->offsetZ = offset;
 }

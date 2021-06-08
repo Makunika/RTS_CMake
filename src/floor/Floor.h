@@ -25,6 +25,7 @@ class Floor {
 public:
     Floor(State* state);
     void draw(LightState* lightState);
+    void drawForShadow(Shader* shader);
 };
 
 

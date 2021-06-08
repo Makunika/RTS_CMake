@@ -48,7 +48,8 @@ public:
 		}
 		glViewport(0, 0, width, height);
 
-		glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_FRAMEBUFFER_SRGB);
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_STENCIL_TEST);
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_BLEND);

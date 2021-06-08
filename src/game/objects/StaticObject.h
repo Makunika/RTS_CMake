@@ -17,11 +17,14 @@ protected:
     int zLevel;
     float scale;
     float angle;
+    float angleX = 0;
+    float offsetZ = 0;
     State* state;
 
 public:
 
     StaticObject(Model *model, float x, float y, int zLevel, float scale, State *state);
+    StaticObject(Model *model, float x, float y, int zLevel, float scale, State *state, float offsetZ);
 
     virtual void draw(Shader* shader, Shader* coloringShader);
     void addCollider(Collider* collider);
