@@ -21,32 +21,35 @@ void Game::initScene() {
 
 void Game::initLight() {
 
-//    PointLight* pointLight = new PointLight(
-//            glm::vec3(0.0f, 0.0f, 0.0f),
-//            glm::vec3(1.5f, 1.5f, 1.5f),
-//            glm::vec3(1.0f, 1.0f, 1.0f),
-//            glm::vec3(2.0f),
-//            1.0f,
-//            0.09f,
-//            0.032f
-//            );
-
     DirLight* dirLight = new DirLight(
-            glm::vec3(0.1f),
+            glm::vec3(0.2f),
+            glm::vec3(0.5f),
             glm::vec3(1.0f),
-            glm::vec3(1.5f),
             glm::vec3(-0.5f, -1.0f, -0.5f)
             );
-    //lightState->lights.push_back(pointLight);
+
+//свет для ночи
+//    DirLight* dirLight = new DirLight(
+//            glm::vec3(0.0f),
+//            glm::vec3(0.486, 0.419, 1) * 0.1f,
+//            glm::vec3(0.486, 0.419, 1) * 0.2f,
+//            glm::vec3(-0.5f, -1.0f, -0.5f)
+//    );
     lightState->lights.push_back(dirLight);
 
     for (const auto &tank : gameState->tanks) {
         lightState->lights.push_back(tank->lightLeft);
     }
+
+    for (const auto &home : gameState->homes) {
+        if (home->pointLight != nullptr) {
+            lightState->lights.push_back(home->pointLight);
+        }
+    }
 }
 
 void Game::initObjects() {
-    gameState->addTank(new Tank(0.0f, 0.0f, 0, gameState->state));
+    gameState->addTank(new Tank(0.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(1.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(2.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(3.0f, 1.0f, 0, gameState->state));
@@ -55,13 +58,63 @@ void Game::initObjects() {
     gameState->addTank(new Tank(6.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(7.0f, 1.0f, 0, gameState->state));
 
-    gameState->addTree(new Tree(0.0f, -1.0f, gameState->state, TREE4));
-    gameState->addTree(new Tree(2.0f, -1.0f, gameState->state, TREE3));
-    gameState->addTree(new Tree(4.0f, -1.0f, gameState->state, TREE1));
-    gameState->addTree(new Tree(6.0f, -1.0f, gameState->state, TREE2));
-    gameState->addTree(new Tree(8.0f, -1.0f, gameState->state, TREE1));
-    gameState->addTree(new Tree(10.0f, -1.0f, gameState->state, TREE1));
-    gameState->addTree(new Tree(12.0f, -2.0f, gameState->state, TREE2));
+    for (float i = -20; i < 20; i+=1.5f) {
+        for (float j = -1; j > -6; j-=1.5f) {
+            gameState->addTree(new Tree(i, j, gameState->state), j == -1);
+        }
+    }
+
+    for (float i = -20; i < -13; i+=1.5f) {
+        for (float j = -1; j < 20; j +=1.5f) {
+            gameState->addTree(new Tree(i, j, gameState->state), i > -12);
+        }
+    }
+
+    for (float i = -20; i < 20; i+=1.5f) {
+        for (float j = 15; j < 20; j+=1.5f) {
+            gameState->addTree(new Tree(i, j, gameState->state), j == 15);
+        }
+    }
+
+    for (float i = 15; i < 20; i +=1.5f) {
+        for (float j = -1; j < 20; j +=1.5f) {
+            gameState->addTree(new Tree(i, j, gameState->state), j == -1);
+        }
+    }
+
+
+    gameState->addHome(new Home(10.0f, 8.0f, gameState->state, HOUSE3, 225.0f, true));
+    gameState->addHome(new Home(5.0f, 8.0f, gameState->state, HOUSE3, 90.0f + 180.0f, true));
+    gameState->addHome(new Home(-10.0f, 3.0f, gameState->state, HOUSE1, 245.0f));
+    gameState->addHome(new Home(10.0f, 4.0f, gameState->state, HOUSE2, 180.0f));
+    gameState->addHome(new Home(-9.0f, 9.0f, gameState->state, HOUSE3, 0.0f, true));
+    gameState->addHome(new Home(-8.0f, 13.0f, gameState->state, HOUSE2, 76.0f));
+
+    gameState->addTree(new Tree(5, 6, gameState->state));
+    gameState->addTree(new Tree(4, 5.5, gameState->state));
+    gameState->addTree(new Tree(6, 6, gameState->state));
+    gameState->addTree(new Tree(5, 5, gameState->state));
+    gameState->addTree(new Tree(4, 5, gameState->state));
+
+    gameState->addTree(new Tree(3, 7, gameState->state));
+    gameState->addTree(new Tree(2, 8, gameState->state));
+
+    gameState->addTree(new Tree(6, 12, gameState->state));
+    gameState->addTree(new Tree(7, 13, gameState->state));
+    gameState->addTree(new Tree(8, 12, gameState->state));
+
+    gameState->addTree(new Tree(-6, 10, gameState->state));
+    gameState->addTree(new Tree(-5, 13, gameState->state));
+    gameState->addTree(new Tree(-5, 12, gameState->state));
+    gameState->addTree(new Tree(-6, 14, gameState->state));
+
+    gameState->addTree(new Tree(-7, 4, gameState->state));
+    gameState->addTree(new Tree(-7, 5, gameState->state));
+    gameState->addTree(new Tree(-6, 5, gameState->state));
+
+    gameState->addTree(new Tree(-7, 8, gameState->state));
+
+
 //    gameState->addTree(new Tree(2.0f, -2.0f, gameState->state, TREE1));
 //    gameState->addTree(new Tree(3.0f, -2.0f, gameState->state, TREE1));
 //    gameState->addTree(new Tree(4.0f, -2.0f, gameState->state, TREE2));
@@ -71,7 +124,7 @@ void Game::initObjects() {
 
 void Game::update() {
     for (const auto &tank : gameState->tanks) {
-        tank->update();
+        tank->update(&gameState->staticObjects);
     }
 }
 
@@ -93,6 +146,16 @@ void Game::draw() {
         tree->draw(Tree::modelShader, nullptr);
     }
 
+    Home::modelShader->use();
+    Home::modelShader->setProjectionAndView(proj, view);
+    Home::modelShader->setFloat("shininess", 64.0f);
+    Home::modelShader->setVec3("viewPos", gameState->state->camera->Position);
+    lightState->allUse(Home::modelShader);
+    shadow->initShader(Home::modelShader);
+
+    for (const auto &home : gameState->homes) {
+        home->draw(Home::modelShader, nullptr);
+    }
 
     Tank::modelShader->use();
     Tank::modelShader->setProjectionAndView(proj, view);
@@ -152,6 +215,10 @@ void Game::updateShadow() {
 
     for (const auto &tree : gameState->trees) {
         tree->draw(shadow->shaderShadow, nullptr);
+    }
+
+    for (const auto &home : gameState->homes) {
+        home->draw(shadow->shaderShadow, nullptr);
     }
 
     for (const auto &tank : gameState->tanks) {

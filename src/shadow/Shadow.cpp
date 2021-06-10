@@ -39,9 +39,9 @@ void Shadow::updateShadows(glm::vec3 lightDir) {
     //lightProjection =  glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, -10.0f, 20.0f);
 
     glm::vec3 pos = state->camera->Position;
-    pos.y = 4.0f;
-    glm::vec2 fr = glm::vec2(state->camera->Front.x, state->camera->Front.z) * 5.0f;
-    glm::vec2 ri = glm::vec2(state->camera->Right.x, state->camera->Right.z) * 5.0f;
+    pos.y = 7.0f;
+    glm::vec2 fr = glm::vec2(state->camera->Front.x, state->camera->Front.z) * 6.0f;
+    glm::vec2 ri = glm::vec2(state->camera->Right.x, state->camera->Right.z) * 6.0f;
     pos.z = pos.z + fr.y + ri.y;
     pos.x = pos.x + fr.x + ri.x;
 
@@ -70,11 +70,7 @@ void Shadow::initShader(Shader *shader) {
     shader->use();
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    glm::vec3 pos = state->camera->Position;
-    pos.y = 4.0f;
-    pos.z -= 1.0f;
     shader->setInt("shadow_map", 10);
-    shader->setVec3("lightPos", pos);
     shader->setMatrix4("lightSpaceMatrix", lightSpaceMatrix);
 }
 
@@ -87,9 +83,9 @@ void Shadow::showDebugWindow() {
     {
         float quadVertices[] = {
                 // координаты      // текстурные координаты
-                0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-                0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                1.0f,  0.0f, 0.0f, 1.0f, 1.0f,
+                0.25f, -0.25f, 0.0f, 0.0f, 1.0f,
+                0.25f, -1.0f, 0.0f, 0.0f, 0.0f,
+                1.0f,  -0.25f, 0.0f, 1.0f, 1.0f,
                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
         };
 

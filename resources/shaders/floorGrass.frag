@@ -80,7 +80,7 @@ void main()
         result += calcSpotLight(spotLights[i], norm, FragPos, viewDir, diff, spec);
     }
 
-    FragColor = vec4(result * 0.5, 1.0);
+    FragColor = vec4(result, 1.0);
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace)
