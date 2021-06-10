@@ -10,6 +10,7 @@
 #include "../shaders/Shader.h"
 #include "../state/State.h"
 #include "../state/LightState.h"
+#include "../shadow/Shadow.h"
 
 class Floor {
     VAO_VBO vFloorLines;
@@ -24,7 +25,7 @@ class Floor {
 
 public:
     Floor(State* state);
-    void draw(LightState* lightState);
+    void draw(LightState *lightState, Shadow *shadow);
     void drawForShadow(Shader* shader);
 };
 

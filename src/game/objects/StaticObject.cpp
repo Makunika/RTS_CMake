@@ -18,10 +18,6 @@ void StaticObject::draw(Shader *shader, Shader *coloringShader) {
     shader->setMatrix4("model", modelS);
     if (coloringShader != nullptr) {
         coloringShader->use();
-        modelS = glm::mat4(1.0f);
-        modelS = glm::translate(modelS, glm::vec3(x, 0.0f + 1.0 * zLevel, y));
-        modelS = glm::scale(modelS, glm::vec3(scale + scale * 0.1f));
-        modelS = glm::rotate(modelS, angle, glm::vec3(0.0f, 1.0f, 0.0f));
         coloringShader->setMatrix4("model", modelS);
 
         model->drawSelected(*shader, *coloringShader);

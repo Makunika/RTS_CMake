@@ -11,6 +11,7 @@
 #include "../controls/GameControls.h"
 #include "../light/DirLight.h"
 #include "../floor/Floor.h"
+#include "../shadow/Shadow.h"
 
 using namespace std;
 
@@ -20,6 +21,9 @@ class Game {
     LightState* lightState;
     GameControls* gameControls;
     Floor* floor;
+    Shadow* shadow;
+    unsigned int quadVAO = 0;
+    unsigned int quadVBO;
 
 public:
     Game(State* state);
@@ -27,6 +31,7 @@ public:
     void update();
     void draw();
     void processInput();
+    void updateShadow();
 
     GameState *getGameState() const;
 
@@ -41,7 +46,7 @@ private:
     void initShaders();
     void initFloor();
     void initShadows();
-    void updateShadow();
+
 };
 
 

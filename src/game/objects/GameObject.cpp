@@ -19,16 +19,18 @@ void GameObject::move() {
         speed = glm::vec2(0.0f);
 
         if (anglePostMove != -1234) {
-            angle = anglePostMove;
+            angleEnd = anglePostMove;
         }
         anglePostMove = -1234;
-        std::cout << "angle: " << angle << std::endl;
+        std::cout << "angleEnd: " << angleEnd << std::endl;
     }
 }
 
 void GameObject::moveTo(glm::vec2 &point) {
     this->speed = glm::normalize(point - glm::vec2(x,y)) * speedValue;
     this->point = glm::vec2(point.x, point.y);
+    angleEnd = glm::atan(speed.x, speed.y);
+    anglePostMove = -1234;
 }
 
 bool GameObject::getIsSelected() {
@@ -40,22 +42,28 @@ void GameObject::moveTo(glm::vec2 &point, float anglePostMove) {
     this->anglePostMove = anglePostMove;
 }
 
-GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale, State *state, float speedValue)
-        : StaticObject(model, x, y, zLevel, scale, state), speedValue(speedValue) {
+GameObject::GameObject(Model *model, float x, float y, int zLevel, float scale, State *state, float speedValue,
+                       float speedRotate)
+        : StaticObject(model, x, y, zLevel, scale, state), speedValue(speedValue), speedRotate(speedRotate) {
     this->speed = glm::vec2(0.0f);
     point = glm::vec2(0.0f);
     anglePostMove = -1234;
     isSelected = false;
+    angleEnd = 0.0f;
 }
 
 void GameObject::draw(Shader *shader, Shader *coloringShader) {
-
-    if (speed.x != 0 || speed.y != 0) {
-        angle = glm::atan(speed.x, speed.y);
-    }
     StaticObject::draw(shader, isSelected ? coloringShader : nullptr);
 }
 
 void GameObject::update() {
-    move();
+    if (abs(angle - angleEnd) > 0.1) {
+        rotate();
+    } else {
+        move();
+    }
+}
+
+void GameObject::rotate() {
+    angle = angleEnd;
 }

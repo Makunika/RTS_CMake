@@ -7,13 +7,13 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 Tank::Tank(float x, float y, int zLevel, State* state): GameObject(
-        ResourceManager::loadModel("tank\\tank.blend"),
+        ResourceManager::loadModel("tank\\IS4.obj"),
         x,
         y,
         zLevel,
-        0.04,
+        0.15,
         state,
-        1.0f / 30) {
+        1.0f / 60, 1.0f) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
     if (modelShader == nullptr) {
         modelShader = ResourceManager::loadShader("model_test");
@@ -47,4 +47,10 @@ void Tank::update() {
     lightLeft->setDirection(getFront());
     lightLeft->setPosition(getPositionLightLeft());
     GameObject::update();
+}
+
+void Tank::draw(Shader *shader, Shader *coloringShader) {
+    glDisable(GL_CULL_FACE);
+    GameObject::draw(shader, coloringShader);
+    glEnable(GL_CULL_FACE);
 }

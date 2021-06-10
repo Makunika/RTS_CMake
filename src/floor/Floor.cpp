@@ -6,6 +6,7 @@
 #include "../resource/ResourceManager.h"
 #include "Floor.h"
 #include "../textures/TextureOne.h"
+#include "../shadow/Shadow.h"
 
 Floor::Floor(State* state) {
     int slices = 64;
@@ -75,7 +76,7 @@ Floor::Floor(State* state) {
 
 }
 
-void Floor::draw(LightState* lightState) {
+void Floor::draw(LightState *lightState, Shadow *shadow) {
     glm::mat4 p = state->getProjection();
     glm::mat4 v = state->camera->getViewMatrix();
 
@@ -98,6 +99,7 @@ void Floor::draw(LightState* lightState) {
     glCullFace(GL_FRONT);
 
     shaderGlass->use();
+    shadow->initShader(shaderGlass);
     shaderGlass->setProjectionAndView(p, v);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(64.0f, 1.0f, 64.0f));

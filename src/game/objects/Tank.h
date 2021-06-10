@@ -21,6 +21,8 @@ public:
     glm::vec3 getPositionLightLeft();
 
     void update() override;
+
+    void draw(Shader *shader, Shader *coloringShader) override;
 };
 
 #endif //RTS_TANK_H

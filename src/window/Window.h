@@ -51,7 +51,7 @@ public:
         //glEnable(GL_FRAMEBUFFER_SRGB);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_STENCIL_TEST);
-        //glEnable(GL_MULTISAMPLE);
+        glEnable(GL_MULTISAMPLE);
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -112,7 +112,7 @@ public:
         vector<float> q = ShaderUtils::getQuad();
         VAO_VBO vScreen = ShaderUtils::load2vec2(&q[0], q.size());
 
-        stbi_set_flip_vertically_on_load(true);
+        //stbi_set_flip_vertically_on_load(true);
 
         unsigned int framebuffer;
         glGenFramebuffers(1, &framebuffer);
@@ -141,6 +141,8 @@ public:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             glStencilMask(0x00); // убеждаемся, что мы не обновляем буфер трафарета во время рисования пола
+
+            game->updateShadow();
 
             processInput();
 
