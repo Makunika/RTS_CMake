@@ -57,7 +57,7 @@ void GameObject::draw(Shader *shader, Shader *coloringShader) {
 }
 
 void GameObject::update() {
-    if (abs(angle - angleEnd) > 0.1) {
+    if (abs(angle - angleEnd) > 0.01) {
         rotate();
     } else {
         move();
@@ -65,5 +65,31 @@ void GameObject::update() {
 }
 
 void GameObject::rotate() {
-    angle = angleEnd;
+    float x = glm::sin(angle);
+    float z = glm::cos(angle);
+
+    float xEnd = glm::sin(angleEnd);
+    float zEnd = glm::cos(angleEnd);
+
+    if (xEnd > x) {
+        x += 0.1f;
+        if (x > xEnd)
+            x = xEnd;
+    } else if (xEnd != x) {
+        x -= 0.1f;
+        if (x < xEnd)
+            x = xEnd;
+    }
+
+    if (zEnd > z) {
+        z += 0.1f;
+        if (z > zEnd)
+            z = zEnd;
+    } else if (zEnd != z) {
+        z -= 0.1f;
+        if (z < zEnd)
+            z = zEnd;
+    }
+
+    angle = glm::atan(x, z);
 }

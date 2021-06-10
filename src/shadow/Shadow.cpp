@@ -18,8 +18,10 @@ Shadow::Shadow(State* state) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     // Прикрепляем текстуру глубины в качестве буфера глубины для FBO
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -38,8 +40,10 @@ void Shadow::updateShadows(glm::vec3 lightDir) {
 
     glm::vec3 pos = state->camera->Position;
     pos.y = 4.0f;
-    pos.z = pos.z - 2.0f;
-    //pos.x = pos.x + 1.0f;
+    glm::vec2 fr = glm::vec2(state->camera->Front.x, state->camera->Front.z) * 5.0f;
+    glm::vec2 ri = glm::vec2(state->camera->Right.x, state->camera->Right.z) * 5.0f;
+    pos.z = pos.z + fr.y + ri.y;
+    pos.x = pos.x + fr.x + ri.x;
 
     glm::vec3 up = glm::normalize(glm::cross(glm::normalize(glm::cross(lightDir, glm::vec3(0.0, 1.0, 0.0))), lightDir));
 
