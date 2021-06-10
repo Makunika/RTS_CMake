@@ -31,14 +31,19 @@ Shadow::Shadow(State* state) {
 }
 
 void Shadow::updateShadows(glm::vec3 lightDir) {
+
     lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
+
+    //lightProjection =  glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, -10.0f, 20.0f);
 
     glm::vec3 pos = state->camera->Position;
     pos.y = 4.0f;
     pos.z = pos.z - 2.0f;
     //pos.x = pos.x + 1.0f;
 
-    lightView = glm::lookAt(pos, pos + lightDir, glm::vec3(0.0, 1.0, 0.0));
+    glm::vec3 up = glm::normalize(glm::cross(glm::normalize(glm::cross(lightDir, glm::vec3(0.0, 1.0, 0.0))), lightDir));
+
+    lightView = glm::lookAt(pos, pos + glm::normalize(lightDir), up);
     lightSpaceMatrix = lightProjection * lightView;
 }
 
@@ -67,4 +72,37 @@ void Shadow::initShader(Shader *shader) {
     shader->setInt("shadow_map", 10);
     shader->setVec3("lightPos", pos);
     shader->setMatrix4("lightSpaceMatrix", lightSpaceMatrix);
+}
+
+void Shadow::showDebugWindow() {
+    Shader* dShader = ResourceManager::loadShader("debugShadow");
+    initShader(dShader);
+
+
+    if (quadVAO == 0)
+    {
+        float quadVertices[] = {
+                // координаты      // текстурные координаты
+                0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                1.0f,  0.0f, 0.0f, 1.0f, 1.0f,
+                1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+
+        // Установка VAO пола
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    }
+
+    dShader->use();
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
 }

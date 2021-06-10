@@ -16,6 +16,8 @@ class Shadow {
     unsigned int depthMapFBO;
     unsigned int depthMap;
     State* state;
+    unsigned int quadVAO = 0;
+    unsigned int quadVBO;
 
 public:
     Shader* shaderShadow;
@@ -25,6 +27,8 @@ public:
     void use();
     void initShader(Shader* shader);
     void unuse();
+
+    void showDebugWindow();
 };
 
 

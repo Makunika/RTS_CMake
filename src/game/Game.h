@@ -22,8 +22,7 @@ class Game {
     GameControls* gameControls;
     Floor* floor;
     Shadow* shadow;
-    unsigned int quadVAO = 0;
-    unsigned int quadVBO;
+
 
 public:
     Game(State* state);

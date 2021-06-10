@@ -35,7 +35,7 @@ void Game::initLight() {
             glm::vec3(0.1f),
             glm::vec3(1.0f),
             glm::vec3(1.5f),
-            glm::vec3(-1.2f, -1.0f, -0.3f)
+            glm::vec3(-0.5f, -1.0f, -0.5f)
             );
     //lightState->lights.push_back(pointLight);
     lightState->lights.push_back(dirLight);
@@ -108,36 +108,9 @@ void Game::draw() {
         tank->draw(Tank::modelShader, Tank::selectedShader);
     }
 
-    Shader* dShader = ResourceManager::loadShader("debugShadow");
-    shadow->initShader(dShader);
-
-
-    if (quadVAO == 0)
-    {
-        float quadVertices[] = {
-                // координаты      // текстурные координаты
-                0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-                0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                1.0f,  0.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        };
-
-        // Установка VAO пола
-        glGenVertexArrays(1, &quadVAO);
-        glGenBuffers(1, &quadVBO);
-        glBindVertexArray(quadVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    if (gameState->state->debug) {
+        shadow->showDebugWindow();
     }
-
-    dShader->use();
-    glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
 }
 
 void Game::initShaders() {
@@ -171,7 +144,7 @@ void Game::initShadows() {
 }
 
 void Game::updateShadow() {
-    shadow->updateShadows(glm::vec3(-1.2f, -1.0f, -0.3f));
+    shadow->updateShadows(glm::vec3(-0.5f, -1.0f, -0.5f));
 
     shadow->use();
 
