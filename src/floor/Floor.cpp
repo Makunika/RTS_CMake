@@ -109,7 +109,7 @@ void Floor::draw(LightState *lightState, Shadow *shadow) {
     shaderGlass->setVec3("viewPos", state->camera->Position);
     shaderGlass->setInt("texture_diffuse1", 0);
     shaderGlass->setInt("texture_specular1", 1);
-    lightState->allUse(shaderGlass);
+    lightState->allUse(shaderGlass, state->isDay);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diff->getTexture());

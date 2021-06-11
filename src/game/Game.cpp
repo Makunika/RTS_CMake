@@ -168,7 +168,7 @@ void Game::draw() {
     Tree::modelShader->setProjectionAndView(proj, view);
     Tree::modelShader->setFloat("shininess", 64.0f);
     Tree::modelShader->setVec3("viewPos", gameState->state->camera->Position);
-    lightState->allUse(Tree::modelShader);
+    lightState->allUse(Tree::modelShader, isDay);
     shadow->initShader(Tree::modelShader);
 
     for (const auto &tree : gameState->trees) {
@@ -180,7 +180,7 @@ void Game::draw() {
     Home::modelShader->setProjectionAndView(proj, view);
     Home::modelShader->setFloat("shininess", 64.0f);
     Home::modelShader->setVec3("viewPos", gameState->state->camera->Position);
-    lightState->allUse(Home::modelShader);
+    lightState->allUse(Home::modelShader, isDay);
     shadow->initShader(Home::modelShader);
 
     for (const auto &home : gameState->homes) {
@@ -191,7 +191,7 @@ void Game::draw() {
     Lamp::modelShader->setProjectionAndView(proj, view);
     Lamp::modelShader->setFloat("shininess", 64.0f);
     Lamp::modelShader->setVec3("viewPos", gameState->state->camera->Position);
-    lightState->allUse(Lamp::modelShader);
+    lightState->allUse(Lamp::modelShader, isDay);
     shadow->initShader(Lamp::modelShader);
 
     for (const auto &lamp : gameState->lamps) {
@@ -203,7 +203,7 @@ void Game::draw() {
     Tank::modelShader->setProjectionAndView(proj, view);
     Tank::modelShader->setFloat("shininess", 64.0f);
     Tank::modelShader->setVec3("viewPos", gameState->state->camera->Position);
-    lightState->allUse(Tank::modelShader);
+    lightState->allUse(Tank::modelShader, isDay);
     shadow->initShader(Tank::modelShader);
 
     Tank::selectedShader->use();

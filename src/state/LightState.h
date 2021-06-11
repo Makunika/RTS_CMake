@@ -18,14 +18,19 @@ struct LightState {
     vector<Light*> lights;
     DirLight* dirLight;
 
-    void allUse(Shader* shader) {
+    void allUse(Shader* shader, bool isDay) {
         shader->use();
+        if (isDay) {
+            shader->setInt("countPointLights", 0);
+            shader->setInt("countSpotLights", 0);
+            dirLight->use(shader);
+        } else {
+            shader->setInt("countPointLights", getCountPointLight());
+            shader->setInt("countSpotLights", getCountSpotLight());
 
-        shader->setInt("countPointLights", getCountPointLight());
-        shader->setInt("countSpotLights", getCountSpotLight());
-
-        for (const auto &light : lights) {
-            light->use(shader);
+            for (const auto &light : lights) {
+                light->use(shader);
+            }
         }
     }
 
