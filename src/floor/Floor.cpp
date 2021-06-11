@@ -82,7 +82,7 @@ void Floor::draw(LightState *lightState, Shadow *shadow) {
 
     if (state->debug) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-32.5f, -0.5, -32.5f));
+        model = glm::translate(model, glm::vec3(-32.5f, 0.6f, -32.5f));
         model = glm::scale(model, glm::vec3(64.0f));
 
         shaderLines->use();
