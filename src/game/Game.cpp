@@ -254,6 +254,7 @@ void Game::updateShadow() {
     shadow->use();
 
     floor->drawForShadow(shadow->shaderShadow);
+    glCullFace(GL_FRONT);
 
     for (const auto &tree : gameState->trees) {
         tree->draw(shadow->shaderShadow, nullptr);
@@ -264,13 +265,14 @@ void Game::updateShadow() {
     }
 
     for (const auto &tank : gameState->tanks) {
-        tank->draw(shadow->shaderShadow, nullptr);
+        tank->drawForShadow(shadow->shaderShadow);
     }
 
     for (const auto &lamp : gameState->lamps) {
         lamp->draw(shadow->shaderShadow, nullptr);
     }
 
+    glCullFace(GL_BACK);
     shadow->unuse();
 
 }

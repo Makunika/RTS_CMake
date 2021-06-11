@@ -54,3 +54,7 @@ void Tank::draw(Shader *shader, Shader *coloringShader) {
     GameObject::draw(shader, coloringShader);
     glEnable(GL_CULL_FACE);
 }
+
+void Tank::drawForShadow(Shader *shader) {
+    GameObject::draw(shader, nullptr);
+}

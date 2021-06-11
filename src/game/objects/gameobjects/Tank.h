@@ -23,6 +23,8 @@ public:
     void update(vector<StaticObject *> *objects) override;
 
     void draw(Shader *shader, Shader *coloringShader) override;
+
+    void drawForShadow(Shader* shader);
 };
 
 #endif //RTS_TANK_H
