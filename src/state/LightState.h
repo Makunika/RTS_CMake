@@ -8,6 +8,7 @@
 #include "../light/Light.h"
 #include "../light/PointLight.h"
 #include "../light/SpotLight.h"
+#include "../light/DirLight.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ using namespace std;
 struct LightState {
 
     vector<Light*> lights;
+    DirLight* dirLight;
 
     void allUse(Shader* shader) {
         shader->use();

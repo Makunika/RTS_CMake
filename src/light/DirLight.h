@@ -16,6 +16,7 @@ public:
 
     void use(Shader *shader) override;
 
+    void change(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
 };
 
 

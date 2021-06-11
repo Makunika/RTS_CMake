@@ -10,6 +10,7 @@
 #include "../window/MousePicker.h"
 #include "../game/objects/static/Tree.h"
 #include "../game/objects/static/Home.h"
+#include "../game/objects/static/Lamp.h"
 
 struct GameState {
     vector<GameObject*> gameObjects;
@@ -18,6 +19,8 @@ struct GameState {
     vector<Tree*> trees;
     vector<Home*> homes;
     vector<StaticObject*> staticObjects;
+    vector<Lamp*> lamps;
+
     State* state;
     MousePicker* mousePicker;
 
@@ -40,6 +43,10 @@ struct GameState {
     void addHome(Home* home) {
         homes.push_back(home);
         staticObjects.push_back(home);
+    }
+
+    void addLamp(Lamp* lamp) {
+        lamps.push_back(lamp);
     }
 };
 

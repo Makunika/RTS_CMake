@@ -21,7 +21,7 @@ void Game::initScene() {
 
 void Game::initLight() {
 
-    DirLight* dirLight = new DirLight(
+    lightState->dirLight = new DirLight(
             glm::vec3(0.2f),
             glm::vec3(0.5f),
             glm::vec3(1.0f),
@@ -35,7 +35,7 @@ void Game::initLight() {
 //            glm::vec3(0.486, 0.419, 1) * 0.2f,
 //            glm::vec3(-0.5f, -1.0f, -0.5f)
 //    );
-    lightState->lights.push_back(dirLight);
+    lightState->lights.push_back(lightState->dirLight);
 
     for (const auto &tank : gameState->tanks) {
         lightState->lights.push_back(tank->lightLeft);
@@ -46,9 +46,14 @@ void Game::initLight() {
             lightState->lights.push_back(home->pointLight);
         }
     }
+
+    for (const auto &lamp : gameState->lamps) {
+        lightState->lights.push_back(lamp->pointLight);
+    }
 }
 
 void Game::initObjects() {
+    //танки
     gameState->addTank(new Tank(0.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(1.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(2.0f, 1.0f, 0, gameState->state));
@@ -58,6 +63,7 @@ void Game::initObjects() {
     gameState->addTank(new Tank(6.0f, 1.0f, 0, gameState->state));
     gameState->addTank(new Tank(7.0f, 1.0f, 0, gameState->state));
 
+    //деревья по периметру
     for (float i = -20; i < 20; i+=1.5f) {
         for (float j = -1; j > -6; j-=1.5f) {
             gameState->addTree(new Tree(i, j, gameState->state), j == -1);
@@ -82,7 +88,7 @@ void Game::initObjects() {
         }
     }
 
-
+    //дома
     gameState->addHome(new Home(10.0f, 8.0f, gameState->state, HOUSE3, 225.0f, true));
     gameState->addHome(new Home(5.0f, 8.0f, gameState->state, HOUSE3, 90.0f + 180.0f, true));
     gameState->addHome(new Home(-10.0f, 3.0f, gameState->state, HOUSE1, 245.0f));
@@ -90,6 +96,7 @@ void Game::initObjects() {
     gameState->addHome(new Home(-9.0f, 9.0f, gameState->state, HOUSE3, 0.0f, true));
     gameState->addHome(new Home(-8.0f, 13.0f, gameState->state, HOUSE2, 76.0f));
 
+    //деревья нужные
     gameState->addTree(new Tree(5, 6, gameState->state));
     gameState->addTree(new Tree(4, 5.5, gameState->state));
     gameState->addTree(new Tree(6, 6, gameState->state));
@@ -114,15 +121,35 @@ void Game::initObjects() {
 
     gameState->addTree(new Tree(-7, 8, gameState->state));
 
-
-//    gameState->addTree(new Tree(2.0f, -2.0f, gameState->state, TREE1));
-//    gameState->addTree(new Tree(3.0f, -2.0f, gameState->state, TREE1));
-//    gameState->addTree(new Tree(4.0f, -2.0f, gameState->state, TREE2));
-//    gameState->addTree(new Tree(5.0f, -2.0f, gameState->state, TREE1));
-//    gameState->addTree(new Tree(6.0f, -2.0f, gameState->state, TREE1));
+    //фонари
+    gameState->addLamp(new Lamp(2, 5, gameState->state, 240.0f));
+    gameState->addLamp(new Lamp(-10, 5, gameState->state, 0.0f));
+    gameState->addLamp(new Lamp(8, 9, gameState->state, 255.0f));
+    gameState->addLamp(new Lamp(-7, 9, gameState->state, 67.0f));
+    gameState->addLamp(new Lamp(2, 9, gameState->state, 240.0f));
 }
 
 void Game::update() {
+
+    if (gameState->state->isDay) {
+        if (!isDay) {
+            isDay = true;
+            lightState->dirLight->change(
+                    glm::vec3(0.2f),
+                    glm::vec3(0.5f),
+                    glm::vec3(1.0f));
+        }
+    } else {
+        if (isDay) {
+            lightState->dirLight->change(
+                    glm::vec3(0.486, 0.419, 1) * 0.05f,
+                    glm::vec3(0.486, 0.419, 1) * 0.2f,
+                    glm::vec3(0.486, 0.419, 1) * 0.3f);
+            isDay = false;
+        }
+
+    }
+
     for (const auto &tank : gameState->tanks) {
         tank->update(&gameState->staticObjects);
     }
@@ -135,6 +162,8 @@ void Game::draw() {
     glm::mat4 view = gameState->state->camera->getViewMatrix();
     glm::mat4 proj = gameState->state->getProjection();
 
+    //деревья
+
     Tree::modelShader->use();
     Tree::modelShader->setProjectionAndView(proj, view);
     Tree::modelShader->setFloat("shininess", 64.0f);
@@ -146,6 +175,7 @@ void Game::draw() {
         tree->draw(Tree::modelShader, nullptr);
     }
 
+    //дома
     Home::modelShader->use();
     Home::modelShader->setProjectionAndView(proj, view);
     Home::modelShader->setFloat("shininess", 64.0f);
@@ -157,6 +187,18 @@ void Game::draw() {
         home->draw(Home::modelShader, nullptr);
     }
 
+    Lamp::modelShader->use();
+    Lamp::modelShader->setProjectionAndView(proj, view);
+    Lamp::modelShader->setFloat("shininess", 64.0f);
+    Lamp::modelShader->setVec3("viewPos", gameState->state->camera->Position);
+    lightState->allUse(Lamp::modelShader);
+    shadow->initShader(Lamp::modelShader);
+
+    for (const auto &lamp : gameState->lamps) {
+        lamp->draw(Lamp::modelShader, nullptr);
+    }
+
+    //танки
     Tank::modelShader->use();
     Tank::modelShader->setProjectionAndView(proj, view);
     Tank::modelShader->setFloat("shininess", 64.0f);
@@ -223,6 +265,10 @@ void Game::updateShadow() {
 
     for (const auto &tank : gameState->tanks) {
         tank->draw(shadow->shaderShadow, nullptr);
+    }
+
+    for (const auto &lamp : gameState->lamps) {
+        lamp->draw(shadow->shaderShadow, nullptr);
     }
 
     shadow->unuse();

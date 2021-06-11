@@ -22,6 +22,7 @@ class Game {
     GameControls* gameControls;
     Floor* floor;
     Shadow* shadow;
+    bool isDay = true;
 
 
 public:

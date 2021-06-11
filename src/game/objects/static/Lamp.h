@@ -6,8 +6,19 @@
 #define RTS_LAMP_H
 
 
-class Lamp {
+#include "../base/StaticObject.h"
+#include "../../../light/PointLight.h"
 
+class Lamp: public StaticObject {
+public:
+
+    PointLight* pointLight;
+
+    Lamp(float x, float y, State *state, float angle);
+
+    static Shader* modelShader;
+
+    const glm::vec3 getPositionLight();
 };
 
 
