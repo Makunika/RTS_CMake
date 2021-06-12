@@ -12,12 +12,13 @@
 
 using namespace std;
 
-//Хранить только не двигающийся свет
 struct LightState {
-
+    //Весь свет
     vector<Light*> lights;
+    //Направленный свет (от солнца)
     DirLight* dirLight;
 
+    //Использовать весь свет для шейдера (если день, то только направленный свет, если ночь - то все источнийи света)
     void allUse(Shader* shader, bool isDay) {
         shader->use();
         if (isDay) {
@@ -41,7 +42,6 @@ struct LightState {
     int getCountSpotLight() {
         return SpotLight::getCount();
     }
-
 };
 
 

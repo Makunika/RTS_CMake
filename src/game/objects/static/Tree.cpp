@@ -53,7 +53,7 @@ Tree::Tree(float x, float y, State *state, TreeType treeType)
 : StaticObject(getTree(treeType), getRandom(x, 1.0f), getRandom(y, 0.2), 0, getScale(treeType), state) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
     if (modelShader == nullptr) {
-        modelShader = ResourceManager::loadShader("tree");
+        modelShader = ResourceManager::loadShader("staticObjects");
     }
     angleX = -AI_MATH_HALF_PI_F;
     angle = (-314 + rand() % 614) / 100.0f;

@@ -11,7 +11,7 @@ Lamp::Lamp(float x, float y, State *state, float angle)
     this->angle = glm::radians(angle);
 
     if (modelShader == nullptr) {
-        modelShader = ResourceManager::loadShader("tree");
+        modelShader = ResourceManager::loadShader("staticObjects");
     }
     pointLight = new PointLight(
             glm::vec3(0.2f),

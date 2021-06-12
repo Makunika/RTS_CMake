@@ -17,13 +17,18 @@ using namespace std;
 
 
 class Game {
+    //Состояние игры
     GameState* gameState;
+    //Состояние света
     LightState* lightState;
+    //Управление игрой
     GameControls* gameControls;
+    //Пол
     Floor* floor;
+    //Тени
     Shadow* shadow;
+    //Флаг, что сейчас день
     bool isDay = true;
-
 
 public:
     Game(State* state);
@@ -40,13 +45,12 @@ public:
     GameControls *getGameControls() const;
 
 private:
+    //Блок инициализаций
     void initScene();
     void initLight();
     void initObjects();
-    void initShaders();
     void initFloor();
     void initShadows();
-
 };
 
 

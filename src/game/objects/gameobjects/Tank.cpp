@@ -16,7 +16,7 @@ Tank::Tank(float x, float y, int zLevel, State* state): GameObject(
         0.8f, 1.0f) {
     addCollider(new Collider(0.0f, 0.0f, 0.5f, state));
     if (modelShader == nullptr) {
-        modelShader = ResourceManager::loadShader("model_test");
+        modelShader = ResourceManager::loadShader("tank");
     }
     if (selectedShader == nullptr) {
         selectedShader = ResourceManager::loadShader("singleColor");

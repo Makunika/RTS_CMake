@@ -13,15 +13,20 @@ const glm::vec3 &MousePicker::getCurrentRay() const {
 }
 
 glm::vec3 MousePicker::calculateMouseRay(double mouseX, double mouseY) {
+    //Нормализуем координаты
     glm::vec2 ray_nds = getNormalizedDeviceCoord(mouseX, mouseY);
+    //Переводим в clip space
     glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
+    //Получаем инвентируемую матрице проекции
     glm::mat4 invProjMat = glm::inverse(state->getProjection());
+    //Переводим в view space
     glm::vec4 eyeCoords = invProjMat * ray_clip;
     eyeCoords = glm::vec4(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
+    //Получаем инвентируемую матрицу отображения
     glm::mat4 invViewMat = glm::inverse(state->camera->getViewMatrix());
+    //Переводим в мировое пространство и возвращаем луч
     glm::vec4 rayWorld = invViewMat * eyeCoords;
     glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld));
-
     return rayDirection;
 }
 

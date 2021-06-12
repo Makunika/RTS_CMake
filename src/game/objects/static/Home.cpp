@@ -44,7 +44,7 @@ Home::Home(float x, float y, State *state, HouseType houseType, float angle, boo
 {
     addCollider(new Collider(0.0f, -0.5f, 1.8f, state));
     if (modelShader == nullptr) {
-        modelShader = ResourceManager::loadShader("tree");
+        modelShader = ResourceManager::loadShader("staticObjects");
     }
     //angleX = -AI_MATH_HALF_PI_F;
     this->angle = glm::radians(angle);

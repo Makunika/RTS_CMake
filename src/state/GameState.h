@@ -13,15 +13,25 @@
 #include "../game/objects/static/Lamp.h"
 
 struct GameState {
+    //Все игровые объекты
     vector<GameObject*> gameObjects;
+    //Все танки
     vector<Tank*> tanks;
+    //Выбранные танки
     vector<Tank*> selectedTanks;
+    //Все деревья
     vector<Tree*> trees;
+    //Все дома
     vector<Home*> homes;
-    vector<StaticObject*> staticObjects;
+    //Все лампы
     vector<Lamp*> lamps;
+    //Все статические объекты (деревья, дома, лампы)
+    vector<StaticObject*> staticObjects;
 
+    //Основные состояние
     State* state;
+
+    //пикер
     MousePicker* mousePicker;
 
     void addTank(Tank* tank) {

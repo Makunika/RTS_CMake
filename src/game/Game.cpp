@@ -130,7 +130,7 @@ void Game::initObjects() {
 }
 
 void Game::update() {
-
+    //Меняем на ночной свет, если стала ночь. И наоборот
     if (gameState->state->isDay) {
         if (!isDay) {
             isDay = true;
@@ -150,6 +150,7 @@ void Game::update() {
 
     }
 
+    //Обновляем все движущиеся объекты (в нашем случае танки)
     for (const auto &tank : gameState->tanks) {
         tank->update(&gameState->staticObjects);
     }
@@ -157,13 +158,13 @@ void Game::update() {
 
 void Game::draw() {
 
+    //Рисуем пол
     floor->draw(lightState, shadow);
 
     glm::mat4 view = gameState->state->camera->getViewMatrix();
     glm::mat4 proj = gameState->state->getProjection();
 
-    //деревья
-
+    //Рисуем деревья
     Tree::modelShader->use();
     Tree::modelShader->setProjectionAndView(proj, view);
     Tree::modelShader->setFloat("shininess", 64.0f);
@@ -175,7 +176,7 @@ void Game::draw() {
         tree->draw(Tree::modelShader, nullptr);
     }
 
-    //дома
+    //Рисуем дома
     Home::modelShader->use();
     Home::modelShader->setProjectionAndView(proj, view);
     Home::modelShader->setFloat("shininess", 64.0f);
@@ -187,6 +188,7 @@ void Game::draw() {
         home->draw(Home::modelShader, nullptr);
     }
 
+    //Рисуем лампы
     Lamp::modelShader->use();
     Lamp::modelShader->setProjectionAndView(proj, view);
     Lamp::modelShader->setFloat("shininess", 64.0f);
@@ -198,7 +200,7 @@ void Game::draw() {
         lamp->draw(Lamp::modelShader, nullptr);
     }
 
-    //танки
+    //Рисуем танки
     Tank::modelShader->use();
     Tank::modelShader->setProjectionAndView(proj, view);
     Tank::modelShader->setFloat("shininess", 64.0f);
@@ -213,13 +215,10 @@ void Game::draw() {
         tank->draw(Tank::modelShader, Tank::selectedShader);
     }
 
+    //Если включен дебаг режим, то рисуем карты теней для дебага
     if (gameState->state->debug) {
         shadow->showDebugWindow();
     }
-}
-
-void Game::initShaders() {
-
 }
 
 void Game::processInput() {
@@ -243,14 +242,14 @@ void Game::initFloor() {
 }
 
 void Game::initShadows() {
-    // Настраиваем карту глубины FBO
     shadow = new Shadow(gameState->state);
-
 }
 
 void Game::updateShadow() {
+    //Обновляем данные для создания карты теней
     shadow->updateShadows(glm::vec3(-0.5f, -1.0f, -0.5f));
 
+    //Рисуем сцену для создания карты теней
     shadow->use();
 
     floor->drawForShadow(shadow->shaderShadow);
@@ -271,10 +270,8 @@ void Game::updateShadow() {
     for (const auto &lamp : gameState->lamps) {
         lamp->draw(shadow->shaderShadow, nullptr);
     }
-
     glCullFace(GL_BACK);
     shadow->unuse();
-
 }
 
 
