@@ -256,6 +256,7 @@
 
 int main(int argc, char* argv[])
 {
+    srand(time(0));
     std::cout << argv[0] << endl;
     Window* window = new Window(1300, 800, "RTS");
     window->run();

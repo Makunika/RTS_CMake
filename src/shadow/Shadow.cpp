@@ -34,7 +34,7 @@ Shadow::Shadow(State* state) {
 
 void Shadow::updateShadows(glm::vec3 lightDir) {
 
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 20.0f);
+    lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, -20.0f, 30.0f);
 
     //lightProjection =  glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, -10.0f, 20.0f);
 

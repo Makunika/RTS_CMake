@@ -9,7 +9,7 @@
 #include "../state/State.h"
 
 class Shadow {
-    const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+    const unsigned int SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
 
     glm::mat4 lightProjection, lightView;
     glm::mat4 lightSpaceMatrix;

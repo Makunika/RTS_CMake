@@ -147,7 +147,18 @@ void Game::update() {
                     glm::vec3(0.486, 0.419, 1) * 0.3f);
             isDay = false;
         }
+    }
 
+    if (gameState->state->changeDirectionLight) {
+        gameState->state->changeDirectionLight = false;
+        printf_s("hello! change dir");
+        glm::vec3 newDir = glm::vec3(
+                Utils::randomNumber(-1.0f, 1.0f),
+                Utils::randomNumber(-1.0f, 0.0f),
+                Utils::randomNumber(-1.0f, 1.0f)
+        );
+        std::cout << "x: " << newDir.x << " y: " << newDir.y << " z: " << newDir.z << endl;
+        lightState->dirLight->changeDir(newDir);
     }
 
     //Обновляем все движущиеся объекты (в нашем случае танки)
@@ -247,7 +258,7 @@ void Game::initShadows() {
 
 void Game::updateShadow() {
     //Обновляем данные для создания карты теней
-    shadow->updateShadows(glm::vec3(-0.5f, -1.0f, -0.5f));
+    shadow->updateShadows(lightState->dirLight->getDirection());
 
     //Рисуем сцену для создания карты теней
     shadow->use();

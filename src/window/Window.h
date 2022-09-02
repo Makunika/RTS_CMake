@@ -88,9 +88,6 @@ public:
 
             glStencilMask(0x00);
 
-            //Обновляем карту теней для игры
-            game->updateShadow();
-
             //Обрабатываем нажатия и так далее
             processInput();
 
@@ -99,6 +96,9 @@ public:
 
             //Обновляем игру
             game->update();
+
+            //Обновляем карту теней для игры
+            game->updateShadow();
 
             //Рисуем игру
             game->draw();

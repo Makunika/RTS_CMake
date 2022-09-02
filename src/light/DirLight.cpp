@@ -20,3 +20,11 @@ void DirLight::change(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) 
     this->diffuse = diffuse;
     this->specular = specular;
 }
+
+void DirLight::changeDir(glm::vec3 direction) {
+    this->direction = direction;
+}
+
+glm::vec3 DirLight::getDirection() {
+    return this->direction;
+}

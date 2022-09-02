@@ -53,6 +53,9 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
     {
         currentState->isDay = !currentState->isDay;
     }
+    if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+        currentState->changeDirectionLight = true;
+    }
 }
 
 
